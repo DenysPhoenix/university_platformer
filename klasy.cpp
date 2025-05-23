@@ -1,4 +1,4 @@
-#include "SFML/Graphics.hpp"
+﻿#include "SFML/Graphics.hpp"
 #include <iostream>
 #include <cmath>
 #include <string>
@@ -72,7 +72,7 @@ void Engine::aktualizacjaPlatform()
 void Engine::aktualizacja()
 {
 }
-// wy�wietlanie
+// wyswietlanie
 
 
 void Engine::wyswietlPlayer()
@@ -91,9 +91,65 @@ void Engine::wyswietlenie()
 {
 }
 
+/////////////////////////////////////////////////////////////////
+///////////////	INICJALIZACJA ELEMENTOW KLAS ////////////////////
+/////////////////////////////////////////////////////////////////
+
+Entity::Entity(int animation_fps = 0, sf::Texture tex)
+{
+
+}
+
+Entity::~Entity()
+{
+
+}
+
+void Entity::animation()
+{
+     for (int i = 0; i <= 150; i+50)
+     {
+         //obcinanie tekstury z jednego obrazka
+         frames.push_back(sf::IntRect(200 + i, 0, 37, 37)); //można zmienic teksturę
+         if (frames.size() == 1) 
+         {
+             setTextureRect(frames[0]);
+         }
+     }
+}
 
 
-
-
+//
+//Player::Player()
+//{
+//
+//}
+//
+//Player::~Player()
+//{
+//
+//}
+//
+//Enemy::Enemy()
+//{
+//
+//}
+//
+//Enemy::~Enemy()
+//{
+//
+//}
+//
+//Platform::Platform()
+//{
+//	setPosition(position);
+//}
+//
+//Platform::~Platform()
+//{
+//
+//}
+//
+//
 
 

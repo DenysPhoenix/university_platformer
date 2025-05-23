@@ -1,9 +1,10 @@
-#pragma once
+ï»¿#pragma once
 
 #include "SFML/Graphics.hpp"
 #include<vector>
 #include<iostream>
 #include <string>
+#include "klasy.cpp"
 #include "SFML\Window.hpp"
 #include "SFML\System.hpp"
 
@@ -11,14 +12,14 @@ class Engine
 {
 private:
 	/*
-	tu umieœciæ trzeba wszystkie zmienne aby gra mog³a dzia³aæ
+	tu umiescic trzeba wszystkie zmienne aby gra mogla dzialac
 	*/
 	sf::RenderWindow* window;
 	sf::VideoMode videomode;
 	sf::Event event;
 	sf::View view1;
 
-	// tu takie zasady dzia³ania gry 
+	// tu takie zasady dzialania gry 
 	bool playerAlive;
 	int maxEnemies;
 	float enemySpawnTimer;
@@ -37,7 +38,7 @@ public:
 	Engine();
 	~Engine();
 	
-	//inicjalizacja obiektów
+	//inicjalizacja obiektÑƒw
 
 	void spawnPlayer();
 	void spawnEnemy();
@@ -55,14 +56,64 @@ public:
 	//aktualizacja wszystkiego
 	void aktualizacja();
 
-	// wyœwietlanie gry
+	// wyswietlanie gry
 	void wyswietlPlayer();
 	void wyswietlEnemies();
 	void wyswietlPlatform();
-	// wyœwietlenie wszystkiego
+	// wyswietlenie wszystkiego
 	void wyswietlenie();
 
 
 
 };
 
+bool checkCollision(const sf::FloatRect& a, const sf::FloatRect& b)
+{
+	return a.intersects(b);
+}
+
+class Entity :public sf::Sprite
+{
+protected:
+	//podstawowe wlasnosci obiektow
+	sf::Texture texture;
+	vector<sf::IntRect> frames;
+	int fps;
+
+	//wlasnosci do korzystania
+	sf::Vector2f pos;
+
+public:
+	Entity(int animation_fps = 0, sf::Texture tex): fps(animation_fps), texture(tex) {};
+
+	//funckja animacji entity
+	virtual void animation();
+	virtual ~Entity() {};
+};
+
+class Player :public Entity
+{
+private:
+	float hp;
+public:
+	Player() {};
+	~Player() {};
+};
+
+class Enemy :public Entity
+{
+private:
+	float hp;
+public:
+	Enemy(float hp) {};
+	~Enemy() {};
+};
+
+class Platform :public Entity
+{
+private:
+
+public:
+	Platform(const sf::Vector2f size, const sf::Vector2f position) {};
+	~Platform() {};
+};
