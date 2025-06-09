@@ -1,12 +1,20 @@
 ﻿#include <iostream>
-#include "klasy.h"
-#include "SFML\Graphics.hpp"
-#include "SFML\Window.hpp"
-#include "SFML\System.hpp"
+#include "silnik.h"
 
 using namespace std;
+
 int main()
 {
+	// powołujemy silnik który całą grę nam uruchamia i tylko aktualizuje i wyświetla i do tamtych funkcji wkładamy funkcje które mają działać
+	
+    Silnik gra;
+	while (gra.czyokno())
+	{
+		gra.aktualizacja();
+		gra.wyswietlenie();
+	}
+	
+
     return 0;
 }
 
