@@ -1,2 +1,22 @@
-﻿  University_platformer.cpp
-  University_platformer.vcxproj -> C:\Users\project\university_platformer\x64\Debug\University_platformer.exe
+﻿  silnik.cpp
+C:\projects\University_platformer\silnik.cpp(46,78): warning C4244: "argument": konwersja z "T" do "float", możliwa utrata danych
+C:\projects\University_platformer\silnik.cpp(46,78): warning C4244:         with
+C:\projects\University_platformer\silnik.cpp(46,78): warning C4244:         [
+C:\projects\University_platformer\silnik.cpp(46,78): warning C4244:             T=unsigned int
+C:\projects\University_platformer\silnik.cpp(46,78): warning C4244:         ]
+C:\projects\University_platformer\silnik.cpp(46,47): warning C4244: "argument": konwersja z "T" do "float", możliwa utrata danych
+C:\projects\University_platformer\silnik.cpp(46,47): warning C4244:         with
+C:\projects\University_platformer\silnik.cpp(46,47): warning C4244:         [
+C:\projects\University_platformer\silnik.cpp(46,47): warning C4244:             T=unsigned int
+C:\projects\University_platformer\silnik.cpp(46,47): warning C4244:         ]
+C:\projects\University_platformer\silnik.cpp(61,11): warning C4244: "inicjowanie": konwersja z "T" do "float", możliwa utrata danych
+C:\projects\University_platformer\silnik.cpp(61,11): warning C4244:         with
+C:\projects\University_platformer\silnik.cpp(61,11): warning C4244:         [
+C:\projects\University_platformer\silnik.cpp(61,11): warning C4244:             T=unsigned int
+C:\projects\University_platformer\silnik.cpp(61,11): warning C4244:         ]
+C:\projects\University_platformer\silnik.cpp(62,11): warning C4244: "inicjowanie": konwersja z "T" do "float", możliwa utrata danych
+C:\projects\University_platformer\silnik.cpp(62,11): warning C4244:         with
+C:\projects\University_platformer\silnik.cpp(62,11): warning C4244:         [
+C:\projects\University_platformer\silnik.cpp(62,11): warning C4244:             T=unsigned int
+C:\projects\University_platformer\silnik.cpp(62,11): warning C4244:         ]
+  University_platformer.vcxproj -> C:\projects\University_platformer\x64\Debug\University_platformer.exe
