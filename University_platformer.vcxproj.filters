@@ -21,9 +21,15 @@
     <ClCompile Include="silnik.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
+    <ClCompile Include="klasy.cpp">
+      <Filter>Pliki źródłowe</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="silnik.h">
+      <Filter>Pliki źródłowe</Filter>
+    </ClInclude>
+    <ClInclude Include="klasy.h">
       <Filter>Pliki źródłowe</Filter>
     </ClInclude>
   </ItemGroup>

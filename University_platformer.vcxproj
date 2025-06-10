@@ -139,10 +139,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="klasy.cpp" />
     <ClCompile Include="silnik.cpp" />
     <ClCompile Include="University_platformer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="klasy.h" />
     <ClInclude Include="silnik.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
