@@ -7,11 +7,6 @@ using namespace std;
 int main()
 {
 	// powołujemy silnik który całą grę nam uruchamia i tylko aktualizuje i wyświetla i do tamtych funkcji wkładamy funkcje które mają działać
-	sf::Texture texture;
-	texture.loadFromFile("idle_knight_1.png");
-	Animation animacja1(texture,);
-
-
 
 
     Silnik gra;

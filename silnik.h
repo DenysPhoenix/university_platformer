@@ -12,6 +12,7 @@ private:
 	sf::VideoMode videomode;
 	sf::Event event;
 	sf::View view1;
+	sf::Color* tlo;
 
 	// tu takie zasady dzialania gry 
 	bool playerAlive;

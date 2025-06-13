@@ -53,13 +53,17 @@ void Silnik::spawnEnemy()
 
 void Silnik::spawnPlatforms()
 {
-	if (platforms.size() > 0)
-	{
-		platforms.clear();
-	}
+	platforms.clear();
 	sf::Sprite pl;
 	float x1 = this->window->getSize().x;
 	float y1 = this->window->getSize().y;
+	if (poz_y == 1)
+	{
+		pl.setTextureRect(sf::IntRect(100, 300, 40, 34));
+		pl.setPosition(0, y1 * 0.9);
+		pl.setScale(100, 3);
+		this->platforms.push_back(pl);
+	}
 	if (poz_x == 2 && poz_y == 1)
 	{
 		for (size_t i = 0; i < 3; i++)
@@ -73,6 +77,7 @@ void Silnik::spawnPlatforms()
 		pl.setTextureRect(sf::IntRect(160, 0, 30, 120));
 		pl.setScale(4, 4);
 		this->platforms.push_back(pl);
+		
 	}
 	else if (poz_x == 3 && poz_y == 1)
 	{
@@ -89,7 +94,21 @@ void Silnik::spawnPlatforms()
 
 void Silnik::statistics()
 {
-	
+	std::ostringstream ss;
+	ss << "(" << poz_x << ", " << poz_y << ")";
+	text.setString(ss.str());
+	if (poz_y == 1)
+	{
+		this->tlo = new sf::Color(255, 186, 0, 0);
+	}
+	else if (poz_y == 2)
+	{
+		this->tlo = new sf::Color(255, 217, 0, 0);
+	}
+	else if (poz_y == 0)
+	{
+		this->tlo = new sf::Color(39, 127, 163, 0);
+	}
 }
 
 //aktualizacje
@@ -159,8 +178,8 @@ void Silnik::aktualizacjaPlayer()
 	}
 	if (player.getPosition().y < 0)
 	{
-		this->inicjalizacjaZmiennych();
 		poz_y += 1;
+		this->inicjalizacjaZmiennych();
 	}
 }
 
@@ -170,9 +189,7 @@ void Silnik::aktualizacjaEnemies()
 
 void Silnik::aktualizacjaStatystyk()
 {
-	std::ostringstream ss;
-	ss << "(" << poz_x << ", " << poz_y << ")";
-	text.setString(ss.str());
+	
 }
 
 void Silnik::aktualizacjaPlatform()
@@ -224,12 +241,12 @@ void Silnik::wyswietlPlatform()
 
 void Silnik::wyswietlenie()
 {
-	this->window->clear();
+	sf::Color kolor1 = *tlo;
+	this->window->clear(kolor1);
 	this->wyswietlEnemies();
 	this->wyswietlPlatform();
 	this->wyswietlPlayer();
 	this->window->display();
-	//std::cout << "polo" << std::endl;
 
 }
 
