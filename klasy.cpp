@@ -1,4 +1,4 @@
-#include "klasy.h"
+ï»¿#include "klasy.h"
 #include "SFML/Graphics.hpp"
 #include <iostream>
 #include <cmath>
@@ -275,7 +275,7 @@ void Player::OnCollision(Entity& other, float dt)
                     }
 
                     platform->SetVelocity(platformPushVelocity);
-                    // Óñòàíàâëèâàåì ôëàã, ÷òî ìû òîëêàåì moveable ïëàòôîðìó
+                    // Ã“Ã±Ã²Ã Ã­Ã Ã¢Ã«Ã¨Ã¢Ã Ã¥Ã¬ Ã´Ã«Ã Ã£, Ã·Ã²Ã® Ã¬Ã» Ã²Ã®Ã«ÃªÃ Ã¥Ã¬ moveable Ã¯Ã«Ã Ã²Ã´Ã®Ã°Ã¬Ã³
                     isPushingMoveablePlatform = true;
 
                 }
@@ -303,6 +303,46 @@ void Player::OnCollision(Entity& other, float dt)
     }
 }
 
+void Player::setTextures(float dt)
+{
+    switch (currentState)
+    {
+    case EntityState::Idle:
+        animationIdle.update(0, dt, faceRight);
+        setTextureRect(animationIdle.uvRect);
+        break;
+    case EntityState::Running:
+        animationRun.update(0, dt, faceRight);
+        setTextureRect(animationRun.uvRect);
+        break;
+    case EntityState::Jumping:
+        animationJump.update(0, dt, faceRight);
+        setTextureRect(animationJump.uvRect);
+        break;
+    case EntityState::Attacking:
+        animationAttack.setFinished(false);
+        animationAttack.update(0, dt, faceRight);
+        setTextureRect(animationAttack.uvRect);
+        /*velocity.x = 0.0f;*/
+        velocity.y += 981.0f * dt;
+        move(velocity * dt);
+        if (animationAttack.isFinished())
+        {
+            currentState = EntityState::Idle;
+        }
+        break;
+    case EntityState::Dying:
+        animationDead.setFinished(false);
+        animationDead.update(0, dt, faceRight);
+        setTextureRect(animationDead.uvRect);
+        if (animationAttack.isFinished())
+        {
+            currentState = EntityState::Idle;
+        }
+        break;
+    }
+}
+
 void Player::update(float dt)
 {
     if (invulnerabilityTimer > 0)
@@ -315,7 +355,7 @@ void Player::update(float dt)
         attackCooldown -= dt;
     }
 
-    if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && attackCooldown <= 0)
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) // && attackCooldown <= 0
     {
         currentState = EntityState::Attacking;
         hasAttackedThisFrame = true;
@@ -330,7 +370,7 @@ void Player::update(float dt)
         //animationDead.reset();
     }
 
-    if (currentState != EntityState::Dying && currentState != EntityState::Attacking)
+    if (currentState != EntityState::Dying) // && currentState != EntityState::Attacking
     {
         velocity.x = 0.0f;
 
@@ -361,6 +401,7 @@ void Player::update(float dt)
             isOnGround = false;
         }
         velocity.y += g * dt;
+        //velocity.y = 0; // do testÃ³w poziomÃ³w
         move(velocity * dt);
 
         if (!isOnGround)
@@ -385,47 +426,7 @@ void Player::update(float dt)
         velocity.y = 0.0f;
     }
 
-    switch (currentState)
-    {
-    case EntityState::Idle:
-        setTexture(*idleTexture);
-        animationIdle.update(0, dt, faceRight);
-        setTextureRect(animationIdle.uvRect);
-        break;
-    case EntityState::Running:
-        setTexture(*runTexture);
-        animationRun.update(0, dt, faceRight);
-        setTextureRect(animationRun.uvRect);
-        break;
-    case EntityState::Jumping:
-        setTexture(*jumpTexture);
-        animationJump.update(0, dt, faceRight);
-        setTextureRect(animationJump.uvRect);
-        break;
-    case EntityState::Attacking:
-        animationAttack.setFinished(false);
-        setTexture(*attackTexture);
-        animationAttack.update(0, dt, faceRight);
-        setTextureRect(animationAttack.uvRect);
-        /*velocity.x = 0.0f;*/
-        velocity.y += 981.0f * dt;
-        move(velocity * dt);
-        if (animationAttack.isFinished())
-        {
-            currentState = EntityState::Idle;
-        }
-        break;
-    case EntityState::Dying:
-        animationDead.setFinished(false);
-        setTexture(*deadTexture);
-        animationDead.update(0, dt, faceRight);
-        setTextureRect(animationDead.uvRect);
-        if (animationAttack.isFinished())
-        {
-            currentState = EntityState::Idle;
-        }
-        break;
-    }
+    
 }
 
 Enemy::Enemy(vector<sf::Texture*> textures, sf::Vector2f position) :
@@ -515,8 +516,8 @@ void Enemy::OnCollision(Entity& other, float dt)
         }
 
 
-        // Óðîí îò âðàãà ê èãðîêó
-        // Èãðîê ïîëó÷àåò óðîí, òîëüêî åñëè âðàã àòàêóåò è èãðîê íå íåóÿçâèì
+        // Ã“Ã°Ã®Ã­ Ã®Ã² Ã¢Ã°Ã Ã£Ã  Ãª Ã¨Ã£Ã°Ã®ÃªÃ³
+        // ÃˆÃ£Ã°Ã®Ãª Ã¯Ã®Ã«Ã³Ã·Ã Ã¥Ã² Ã³Ã°Ã®Ã­, Ã²Ã®Ã«Ã¼ÃªÃ® Ã¥Ã±Ã«Ã¨ Ã¢Ã°Ã Ã£ Ã Ã²Ã ÃªÃ³Ã¥Ã² Ã¨ Ã¨Ã£Ã°Ã®Ãª Ã­Ã¥ Ã­Ã¥Ã³Ã¿Ã§Ã¢Ã¨Ã¬
         if (GetState() == EntityState::Attacking && !player->IsInvulnerable() && player->GetState() != EntityState::Dying)
         {
             player->SetHP(GetDamage());
@@ -789,8 +790,3 @@ void Bee::Update(float dt, Player& player)
         break;
     }
 }
-
-
-
-
-

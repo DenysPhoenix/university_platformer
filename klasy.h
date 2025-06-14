@@ -165,6 +165,8 @@ public:
 
     void OnCollision(Entity& other, float dt);
 
+    void setTextures(float dt);
+
     void ResetAttackFlag() {
         hasAttackedThisFrame = false;
     }
@@ -283,36 +285,36 @@ protected:
     float invulnerabilityTimer;
 };
 
-    class Boar :public Enemy
-    {
-    public:
-        Boar(vector<sf::Texture*> textures, sf::Vector2f pos);
+class Boar :public Enemy
+{
+public:
+    Boar(vector<sf::Texture*> textures, sf::Vector2f pos);
 
-        void Update(float dt, Player& player);
-        void update(float dt) {};
+    void Update(float dt, Player& player);
+    void update(float dt) {};
 
-        ~Boar();
+    ~Boar();
 
-    private:
-        //wlasnosci fizyczne
-        const float CHASE_RANGE = 300.0f;
-        const float ATTACK_RANGE = 50.0f;
-        const float RUN_SPEED = 150.0f;
-        const float WALK_SPEED = 100.0f;
+private:
+    //wlasnosci fizyczne
+    const float CHASE_RANGE = 300.0f;
+    const float ATTACK_RANGE = 50.0f;
+    const float RUN_SPEED = 150.0f;
+    const float WALK_SPEED = 100.0f;
 
-        //ladowanie tekstur
-        sf::Texture* idleTexture;
-        sf::Texture* walkTexture;
-        sf::Texture* runTexture;
-        sf::Texture* hitTexture;
+    //ladowanie tekstur
+    sf::Texture* idleTexture;
+    sf::Texture* walkTexture;
+    sf::Texture* runTexture;
+    sf::Texture* hitTexture;
 
-        //animacje
-        Animation animationIdle;
-        Animation animationWalk;
-        Animation animationRun;
-        Animation animationHit;
+    //animacje
+    Animation animationIdle;
+    Animation animationWalk;
+    Animation animationRun;
+    Animation animationHit;
 
-    };
+};
 
 class Bee :public Enemy
 {
@@ -341,4 +343,3 @@ private:
     Animation animationAttack;
     Animation animationHit;
 };
-

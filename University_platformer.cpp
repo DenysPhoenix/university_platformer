@@ -1,8 +1,10 @@
 ﻿#include <iostream>
 #include "silnik.h"
+#include "SFML/Graphics.hpp"
+#include <vector>
 #include "klasy.h"
 
-
+//
 //static const float VIEW_HEIGHT = 512.0f;
 //
 //void ResizeView(const sf::RenderWindow& window, sf::View& view)
@@ -21,11 +23,11 @@
 //    ResizeView(window, view);
 //
 //    sf::Texture heroIdle, heroRun, heroJump, heroAttack, heroDead;
-//    heroIdle.loadFromFile("hero-Idle.png");
-//    heroRun.loadFromFile("hero-Run.png");
-//    heroJump.loadFromFile("hero-Jump.png");
-//    heroAttack.loadFromFile("hero-Attack.png");
-//    heroDead.loadFromFile("hero-Dead.png");
+//    heroIdle.loadFromFile("grafiki/hero-Idle.png");
+//    heroRun.loadFromFile("grafiki/hero-Run.png");
+//    heroJump.loadFromFile("grafiki/hero-Jump.png");
+//    heroAttack.loadFromFile("grafiki/hero-Attack.png");
+//    heroDead.loadFromFile("grafiki/hero-Dead.png");
 //
 //    vector<sf::Texture*> player_textures;
 //    player_textures.emplace_back(&heroIdle);
@@ -37,9 +39,9 @@
 //    Player hero(player_textures, sf::Vector2f(400.f, 325.f));
 //
 //    sf::Texture staticTex, levTex, moveTex;
-//    staticTex.loadFromFile("static.png");
-//    levTex.loadFromFile("levitating.png");
-//    moveTex.loadFromFile("moveable.png");
+//    staticTex.loadFromFile("grafiki/static.png");
+//    levTex.loadFromFile("grafiki/levitating.png");
+//    moveTex.loadFromFile("grafiki/moveable.png");
 //
 //    vector<Platform> platforms;
 //    /*platforms.emplace_back(Platform(&staticTex, sf::Vector2f(100.f, 75.f), sf::Vector2f(100.f, 400.f), PlatformType::Static));
@@ -60,10 +62,10 @@
 //    platforms.emplace_back(Platform(&staticTex, sf::Vector2f(100.f, 75.f), sf::Vector2f(1000.f, 400.f), PlatformType::Static));
 //
 //    sf::Texture boarIdle, boarWalk, boarRun, boarHit;
-//    boarIdle.loadFromFile("boar-Idle.png");
-//    boarWalk.loadFromFile("boar-Walk.png");
-//    boarRun.loadFromFile("boar-Run.png");
-//    boarHit.loadFromFile("boar-Hit.png");
+//    boarIdle.loadFromFile("grafiki/boar-Idle.png");
+//    boarWalk.loadFromFile("grafiki/boar-Walk.png");
+//    boarRun.loadFromFile("grafiki/boar-Run.png");
+//    boarHit.loadFromFile("grafiki/boar-Hit.png");
 //
 //    vector<sf::Texture*> boar_textures;
 //    boar_textures.emplace_back(&boarIdle);
@@ -72,9 +74,9 @@
 //    boar_textures.emplace_back(&boarHit);
 //
 //    sf::Texture beeFly, beeAttack, beeHit;
-//    beeFly.loadFromFile("bee-Fly.png");
-//    beeAttack.loadFromFile("bee-Attack.png");
-//    beeHit.loadFromFile("bee-Hit.png");
+//    beeFly.loadFromFile("grafiki/bee-Fly.png");
+//    beeAttack.loadFromFile("grafiki/bee-Attack.png");
+//    beeHit.loadFromFile("grafiki/bee-Hit.png");
 //
 //    vector<sf::Texture*> bee_textures;
 //    bee_textures.emplace_back(&beeFly);
@@ -161,9 +163,6 @@
 //        }
 //
 //        // 3) hero and enemies
-//        // Важно: в этом цикле может происходить изменение состояния игрока и врагов
-//        // Поэтому нужно быть осторожным с удалением врагов, если они умирают.
-//        // Здесь мы просто обрабатываем столкновения. Удаление мертвых врагов можно сделать после этого цикла.
 //        for (std::unique_ptr<Enemy>& enemyPtr : enemies)
 //        {
 //            Enemy& enemy = *enemyPtr;
@@ -175,7 +174,6 @@
 //            }
 //        }
 //
-//        // Сброс флага атаки игрока для следующего кадра, если он был установлен
 //        hero.ResetAttackFlag();
 //
 //
@@ -191,22 +189,15 @@
 //    return 0;
 //}
 
-using namespace std;
-
 int main()
 {
 	// powołujemy silnik który całą grę nam uruchamia i tylko aktualizuje i wyświetla i do tamtych funkcji wkładamy funkcje które mają działać
-
-
     Silnik gra;
 	while (gra.czyokno())
 	{
 		gra.aktualizacja();
 		gra.wyswietlenie();
 	}
-	
-
     return 0;
 }
-
 
