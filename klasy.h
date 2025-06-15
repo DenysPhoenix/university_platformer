@@ -202,14 +202,15 @@ public:
 public:
     //zmienne
     const float INVULNERABILITY_DURATION = 1.0f;
-
+    bool isOnGround;
+    bool wasOnGround = false;
 private:
     //wlasnosci fizyczne
     sf::Vector2f velocity;
     float h, g, hp, damage;
 
     //wlasnosci oddzialywania na inne Entity
-    bool canJump, isOnGround, hasAttackedThisFrame;
+    bool canJump,  hasAttackedThisFrame;
     float attackCooldown, invulnerabilityTimer;
     const float ATTACK_COOLDOWN_MAX = 0.5f;
     float attackDuration = 0.5f;

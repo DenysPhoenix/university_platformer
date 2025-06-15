@@ -159,17 +159,7 @@ Platform::Platform(sf::Texture* texture, sf::Vector2f size, sf::Vector2f positio
 
     //skalowanie tekstury do zadanego rozmiaru
     const sf::Texture* currentTexture = getTexture();
-    if (currentTexture && currentTexture->getSize().x > 0 && currentTexture->getSize().y > 0)
-    {
-        setScale(size.x / currentTexture->getSize().x, size.y / currentTexture->getSize().y);
-    }
-    else
-    {
-        std::cerr << "Warning: Texture for platform type " << static_cast<int>(type) << " is invalid or has zero size, cannot scale." << std::endl;
-        setScale(1.f, 1.f);
-    }
     velocity.x = 0.0f;
-    setOrigin(size / 2.f);
 }
 
 Platform::~Platform()
@@ -355,7 +345,7 @@ void Player::update(float dt)
         attackCooldown -= dt;
     }
 
-    if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) // && attackCooldown <= 0
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::J) && attackCooldown <= 0) // 
     {
         currentState = EntityState::Attacking;
         hasAttackedThisFrame = true;
@@ -370,7 +360,7 @@ void Player::update(float dt)
         //animationDead.reset();
     }
 
-    if (currentState != EntityState::Dying) // && currentState != EntityState::Attacking
+    if (currentState != EntityState::Dying && currentState != EntityState::Attacking) // 
     {
         velocity.x = 0.0f;
 
@@ -394,11 +384,19 @@ void Player::update(float dt)
         if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Space) ||
             sf::Keyboard::isKeyPressed(sf::Keyboard::W) ||
             sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-            && canJump && isOnGround)
+            && canJump && (isOnGround || wasOnGround))
         {
-            velocity.y = -sqrtf(2.0f * g * h);
-            canJump = false;
-            isOnGround = false;
+            velocity.y = -sqrtf(1.5f * g * h);
+            
+            if (wasOnGround)
+            {
+                wasOnGround = false;
+            }
+            else
+            {
+                isOnGround = false;
+                wasOnGround = true;
+            }
         }
         velocity.y += g * dt;
         //velocity.y = 0; // do testów poziomów
@@ -406,17 +404,17 @@ void Player::update(float dt)
 
         if (!isOnGround)
         {
-            if (velocity.y < 0.0f) currentState = EntityState::Jumping; //830.0f
-            else currentState = EntityState::Idle;
+            currentState = EntityState::Jumping;
+            //if (velocity.y < 0.0f) currentState = EntityState::Jumping; //830.0f
+            //else currentState = EntityState::Idle;
         }
         else
         {
             if (std::abs(velocity.x) > 0.0f) currentState = EntityState::Running;
             else currentState = EntityState::Idle;
-            velocity.y = 0.0f;
         }
     }
-    else if (currentState == EntityState::Attacking)
+    /*else if (currentState == EntityState::Attacking)
     {
         velocity.x = 0.0f;
     }
@@ -424,7 +422,7 @@ void Player::update(float dt)
     {
         velocity.x = 0.0f;
         velocity.y = 0.0f;
-    }
+    }*/
 
     
 }

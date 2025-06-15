@@ -32,9 +32,9 @@ void Silnik::inicjalizacjaZmiennych()
 
 void Silnik::inicjalizacjaOkna()
 {
-	this->videomode.height = 1000;
-	this->videomode.width = 1800;
-	this->window = new sf::RenderWindow(this->videomode, "Edge of fantasy", sf::Style::Default);
+	this->videomode.height = 1080;
+	this->videomode.width = 1920;
+	this->window = new sf::RenderWindow(this->videomode, "Moon walker", sf::Style::Default);
 
 	this->window->setFramerateLimit(60);
 
@@ -60,7 +60,10 @@ void Silnik::spawnPlayer()
     player_textures.emplace_back(&heroAttack);
     player_textures.emplace_back(&heroDead);
 	player = new Player(player_textures, sf::Vector2f(400.f, 325.f));
-	player->setPosition(this->window->getSize().x / 8, this->window->getSize().y / 2);
+	player->setPosition(orient_x,orient_y);
+	if (poz_y == -7 && poz_x == 6) {
+		player->setPosition(640, 200);
+	}
 }
 
 void Silnik::spawnEnemy()
@@ -75,49 +78,357 @@ void Silnik::spawnBackground()
 	sf::Sprite pl;
 	float x1 = this->window->getSize().x;
 	float y1 = this->window->getSize().y;
-	if (poz_y == 1)
+	if (poz_y == -7 && poz_x == 6)
 	{
-		pl.setTextureRect(sf::IntRect(100, 300, 40, 34));
-		pl.setPosition(0, y1 * 0.9);
-		pl.setScale(100, 3);
-		this->backgrounds.push_back(pl);
-	}
-	if (poz_x == 2 && poz_y == 1)
-	{
-		for (size_t i = 0; i < 3; i++)
+		pl.setTextureRect(sf::IntRect(64, 160, 30, 30));
+		pl.setScale(4, 4.5);
+		for (int i = 0; i < 14; i++)
 		{
-			pl.setPosition(x1 / 9 * (1 + (i * 3)), y1 / 4 * 3);
-			pl.setScale(4, 4);
-			pl.setTextureRect(sf::IntRect(0, 9, 77, 83));
-			this->backgrounds.push_back(pl);
-		}
-		pl.setPosition(x1 / 9 * 8, 0);
-		pl.setTextureRect(sf::IntRect(160, 0, 30, 120));
-		pl.setScale(4, 4);
-		this->backgrounds.push_back(pl);
+			for (int j = 0; j < 8; j++)
+			{
+				pl.setPosition(120+i*120, 100 + j*120);
+				backgrounds.push_back(pl);
+			}
 		
-	}
-	else if (poz_x == 3 && poz_y == 1)
-	{
-		for (size_t i = 0; i < 6; i++)
-		{
-			pl.setPosition(x1 / 9 * (1 + (i)), y1 / 4 * 3);
-			pl.setScale(2, 2);
-			pl.setTextureRect(sf::IntRect(0, 9, 77, 83));
-			this->backgrounds.push_back(pl);
 		}
+	
 	}
+	//if (poz_y == 1)
+	//{
+	//	pl.setTextureRect(sf::IntRect(100, 300, 40, 34));
+	//	pl.setPosition(0, y1 * 0.9);
+	//	pl.setScale(100, 3);
+	//	this->backgrounds.push_back(pl);
+	//}
+	//if (poz_x == 2 && poz_y == 1)
+	//{
+	//	for (size_t i = 0; i < 3; i++)
+	//	{
+	//		pl.setPosition(x1 / 9 * (1 + (i * 3)), y1 / 4 * 3);
+	//		pl.setScale(4, 4);
+	//		pl.setTextureRect(sf::IntRect(0, 9, 77, 83));
+	//		this->backgrounds.push_back(pl);
+	//	}
+	//	pl.setPosition(x1 / 9 * 8, 0);
+	//	pl.setTextureRect(sf::IntRect(160, 0, 30, 120));
+	//	pl.setScale(4, 4);
+	//	this->backgrounds.push_back(pl);
+	//	
+	//}
+	//else if (poz_x == 3 && poz_y == 1)
+	//{
+	//	for (size_t i = 0; i < 6; i++)
+	//	{
+	//		pl.setPosition(x1 / 9 * (1 + (i)), y1 / 4 * 3);
+	//		pl.setScale(2, 2);
+	//		pl.setTextureRect(sf::IntRect(0, 9, 77, 83));
+	//		this->backgrounds.push_back(pl);
+	//	}
+	//}
 	
 }
 
 void Silnik::spawnPlatforms()
 {
+	platforms.clear();
 	sf::Texture staticTex;
 	staticTex.loadFromFile("grafiki/static.png");
-	for (int i = 0; i < 10; i++)
+	float x1 = this->window->getSize().x;
+	float y1 = this->window->getSize().y;
+	Platform pl(&staticTex, sf::Vector2f(200.f, 175.f), sf::Vector2f(0,0), PlatformType::Static);
+
+
+	if (poz_x == 0 && poz_y == 0)
 	{
-		platforms.emplace_back(Platform(&staticTex, sf::Vector2f(100.f, 75.f), sf::Vector2f(i * 100.f,window->getSize().y * 0.9), PlatformType::Static));
+		for (int i = 0; i < 4; i++)
+		{
+			pl.setPosition(i * 350 + 150, y1 - 200);
+			pl.setScale(2.5, 2);
+			platforms.emplace_back(pl);
+		}
+		pl.setPosition(1680, y1 - 300);
+		platforms.emplace_back(pl);
 	}
+
+
+	else if (poz_x == 1 && poz_y == 0)
+	{
+		// platforma dolna , platformy blokujące i platformy do poziomu wyżej
+		pl.setPosition(0, y1 - 100);
+		pl.setScale(24, 2);
+		platforms.emplace_back(pl);
+
+		pl.setPosition(x1 / 4, 800);
+		pl.setScale(3, 4);
+		platforms.emplace_back(pl);
+
+		pl.setPosition(x1 / 4 * 3, 800);
+		pl.setScale(3, 4);
+		platforms.emplace_back(pl);
+
+		pl.setScale(2, 5);
+		pl.setPosition(0,500);
+		platforms.emplace_back(pl);
+
+		pl.setScale(2, 5);
+		pl.setPosition(300, 100);
+		platforms.emplace_back(pl);
+	}
+
+
+	else if (poz_x == 2 && poz_y == 0)
+	{
+		//górna ,dolna, ściany boczne
+		pl.setPosition(0, y1 - 100);
+		pl.setScale(24, 2);
+		platforms.emplace_back(pl);
+
+		pl.setPosition(0,100);
+		pl.setScale(24, 2);
+		platforms.emplace_back(pl);
+
+		pl.setPosition(x1 -250, 200);
+		pl.setScale(2, 8);
+		platforms.emplace_back(pl);
+
+		pl.setPosition(50, 200);
+		pl.setScale(2, 8);
+		platforms.emplace_back(pl);
+
+
+	}
+
+	else if (poz_x == 3 && poz_y == 0)
+	{
+		// platformy w fałdy + platformy od wejść
+
+		for (int i = 0; i < 3; i++)
+		{
+			for (int j = 0; j < 4; j++)
+			{
+				pl.setPosition(640 * i + (j * 50), j * 200 + 200);
+				platforms.emplace_back(pl);
+			}
+		}
+		pl.setPosition(500, y1 - 200);
+		pl.setScale(2.5, 2);
+		platforms.emplace_back(pl);
+
+		pl.setPosition(x1 - 200, 200);
+		pl.setScale(2.5, 2);
+		platforms.emplace_back(pl);
+	}
+	else if (poz_x == 4 && poz_y == 0)
+	{
+		pl.setScale(4, 2);
+		pl.setPosition(0, 980);
+		platforms.emplace_back(pl);
+
+		pl.setScale(4, 2);
+		pl.setPosition(400, 880);
+		platforms.emplace_back(pl);
+
+		pl.setScale(4, 2);
+		pl.setPosition(800, 780);
+		platforms.emplace_back(pl);
+
+		pl.setScale(3, 2);
+		pl.setPosition(1200, 680);
+		platforms.emplace_back(pl);
+
+		pl.setScale(2, 2);
+		pl.setPosition(1500, 580);
+		platforms.emplace_back(pl);
+
+		pl.setScale(1.5, 2);
+		pl.setPosition(100, 450);
+		platforms.emplace_back(pl);
+
+		pl.setScale(1.5, 2);
+		pl.setPosition(350, 350);
+		platforms.emplace_back(pl);
+
+		pl.setScale(1.5, 2);
+		pl.setPosition(600, 250);
+		platforms.emplace_back(pl);
+
+		pl.setScale(2, 2);
+		pl.setPosition(1000, 400);
+		platforms.emplace_back(pl);
+
+		pl.setScale(2, 2);
+		pl.setPosition(1300, 400);
+		platforms.emplace_back(pl);
+
+		pl.setScale(2, 2);
+		pl.setPosition(1600, 400);
+		platforms.emplace_back(pl);
+
+		// === Dwa słupy pionowe ===
+		pl.setScale(1.5, 8);
+		pl.setPosition(300, 200);
+		platforms.emplace_back(pl);
+
+		pl.setScale(1.5, 8);
+		pl.setPosition(1600, 100);
+		platforms.emplace_back(pl);
+	}
+	else if (poz_x == 5 && poz_y == 0)
+	{
+		// 1. Startowa platforma po lewej
+		pl.setScale(3, 2);
+		pl.setPosition(100, 950);
+		platforms.emplace_back(pl);
+
+		// 2. Wysoka platforma do skoku w górę
+		pl.setScale(2, 5);
+		pl.setPosition(400, 800);
+		platforms.emplace_back(pl);
+
+		// 3. Lewy fragment platformy z dziurą (PB)
+		pl.setScale(1.5, 1.5);
+		pl.setPosition(700, 850);
+		platforms.emplace_back(pl);
+
+		// 4. Prawy fragment platformy z dziurą (PB)
+		pl.setScale(1.5, 1.5);
+		pl.setPosition(900, 850);
+		platforms.emplace_back(pl);
+
+		// 5. Platforma pozioma po skoku
+		pl.setScale(2, 2);
+		pl.setPosition(1100, 870);
+		platforms.emplace_back(pl);
+
+		// 6. Wysoka ściana z małym stopniem obok
+		pl.setScale(0.8, 3);
+		pl.setPosition(1320, 880);
+		platforms.emplace_back(pl);
+
+		// 7. Duża pionowa ściana (przeszkoda)
+		pl.setScale(1.5, 6);
+		pl.setPosition(1450, 780);
+		platforms.emplace_back(pl);
+
+		// 8. Mała platforma u góry za ścianą
+		pl.setScale(1.5, 1.5);
+		pl.setPosition(1600, 660);
+		platforms.emplace_back(pl);
+	}
+	else if (poz_x == 6 && poz_y == 0)
+	{
+		
+	}
+
+	else if (poz_x == 3 && poz_y == -1)
+	{
+		pl.setScale(4, 2);
+		pl.setPosition(300, 100);
+		platforms.emplace_back(pl);
+
+		// SKOK W BOK (w prawo, < 300px)
+		pl.setScale(2, 2);
+		pl.setPosition(550, 180);  // 250px w bok, 80px w górę
+		platforms.emplace_back(pl);
+
+		// ŚCIANA pionowa jako przeszkoda
+		pl.setScale(1, 8);
+		pl.setPosition(800, 100);
+		platforms.emplace_back(pl);
+
+		// SKOK PO DRUGIEJ STRONIE ŚCIANY
+		pl.setScale(3, 2);
+		pl.setPosition(900, 250); // za ścianą
+		platforms.emplace_back(pl);
+
+		// SKOK W DÓŁ — spadający segment
+		pl.setScale(2, 2);
+		pl.setPosition(1000, 450);
+		platforms.emplace_back(pl);
+
+		// ŚCIANA pionowa wąska po lewej
+		pl.setScale(1, 6);
+		pl.setPosition(750, 400);
+		platforms.emplace_back(pl);
+
+		// PÓŁKA po lewej — z powrotem
+		pl.setScale(2, 2);
+		pl.setPosition(600, 600);
+		platforms.emplace_back(pl);
+
+		// KOŃCOWA szeroka platforma
+		pl.setScale(5, 2);
+		pl.setPosition(300, 800);
+		platforms.emplace_back(pl);
+	}
+	else if (poz_x == 3 && poz_y == -2)
+	{
+		pl.setScale(4, 2);
+		pl.setPosition(400, 0);
+		platforms.emplace_back(pl);
+
+		// Skok w prawo — lekko w górę
+		pl.setScale(2, 2);
+		pl.setPosition(700, 100);
+		platforms.emplace_back(pl);
+
+		// Ściana — pionowa przeszkoda w środku
+		pl.setScale(1, 8);
+		pl.setPosition(900, 50);
+		platforms.emplace_back(pl);
+
+		// Skok na drugą stronę ściany
+		pl.setScale(2, 2);
+		pl.setPosition(1050, 200);
+		platforms.emplace_back(pl);
+
+		// Spadek niżej — szeroka półka
+		pl.setScale(3, 2);
+		pl.setPosition(900, 400);
+		platforms.emplace_back(pl);
+
+		// Ściana po lewej
+		pl.setScale(1, 10);
+		pl.setPosition(600, 340);
+		platforms.emplace_back(pl);
+
+		// Skok w lewo za ścianę
+		pl.setScale(2, 2);
+		pl.setPosition(450, 520);
+		platforms.emplace_back(pl);
+
+		// Skok w prawo, lekki spadek
+		pl.setScale(2, 2);
+		pl.setPosition(700, 640);
+		platforms.emplace_back(pl);
+
+		// Finalna platforma (np. checkpoint)
+		pl.setScale(5, 2);
+		pl.setPosition(600, 880);
+		platforms.emplace_back(pl);
+	}
+
+
+	if (poz_y == -7 && poz_x == 6)
+	{
+		for (int i = 1; i < 3;i++)
+		{
+			for (int j = 0; j < 2; j++)
+			{
+				Platform pl(&staticTex, sf::Vector2f(100.f, 75.f), sf::Vector2f(640 * i, 300+(600*j)), PlatformType::Static);
+				pl.setScale(2.5, 2);
+				platforms.emplace_back(pl);
+			}
+			
+		}
+		for (int i = 0; i < 4; i++)
+		{
+			Platform pl(&staticTex, sf::Vector2f(100.f, 75.f), sf::Vector2f(480 * i, 600), PlatformType::Static);
+			pl.setScale(2.5, 2);
+			platforms.emplace_back(pl);
+		}
+	}
+	
 	
     //platforms.emplace_back(Platform(&staticTex, sf::Vector2f(100.f, 75.f), sf::Vector2f(200.f, 400.f), PlatformType::Static));
    
@@ -136,7 +447,7 @@ void Silnik::statistics()
 	{
 		this->tlo = new sf::Color(255, 217, 0, 0);
 	}
-	else if (poz_y == 0)
+	else if (poz_y <= 0)
 	{
 		this->tlo = new sf::Color(39, 127, 163, 0);
 	}
@@ -173,26 +484,27 @@ void Silnik::aktualizacjaEvents()
 void Silnik::aktualizacjaPlayer()
 {
 	player->update(dt);
-	//if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))// && player.getPosition().y >= 0
-	//{
-	//	player->move(0.f, -9.5f);
+	player->ResetAttackFlag();
+	/*if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+	{
+		player->move(0.f, -9.5f);
 
-	//}
-	//if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))// && player.getPosition().y <= 550
-	//{
-	//	player->move(0.f, 9.5f);
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+	{
+		player->move(0.f, 9.5f);
 
-	//}
-	//if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))// && player.getPosition().x >= 0
-	//{
-	//	player->move(-9.5f, 0.f);
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+	{
+		player->move(-9.5f, 0.f);
 
-	//}
-	//if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) )//&& player.getPosition().x <= 800
-	//{
-	//	player->move(9.5f, 0.f);
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) )
+	{
+		player->move(9.5f, 0.f);
 
-	//}
+	}*/
 	for (Platform& platform : platforms)
 	{
 		if (player->GetCollider().intersects(platform.GetCollider()))
@@ -205,21 +517,29 @@ void Silnik::aktualizacjaPlayer()
 	if (player->getPosition().x > this->window->getSize().x)
 	{
 		poz_x += 1;
+		orient_y = player->GetPosition().y;
+		orient_x = 150;
 		this->inicjalizacjaZmiennych();
 	}
 	if (player->getPosition().y > this->window->getSize().y)
 	{
 		poz_y -= 1;
+		orient_x = player->GetPosition().x;
+		orient_y = 150;
 		this->inicjalizacjaZmiennych();
 	}
 	if (player->getPosition().x < 0)
 	{
 		poz_x -= 1;
+		orient_y = player->GetPosition().y;
+		orient_x = window->getSize().x -150;
 		this->inicjalizacjaZmiennych();
 	}
-	if (player->getPosition().y < 0)
+	if (player->getPosition().y < -100)
 	{
 		poz_y += 1;
+		orient_x = player->GetPosition().x;
+		orient_y = window->getSize().y - 150;
 		this->inicjalizacjaZmiennych();
 	}
 }
@@ -326,10 +646,11 @@ void Silnik::wyswietlEnemies()
 void Silnik::wyswietlPlatform()
 {
 	sf::Texture texture;
-	texture.loadFromFile("grafiki/static.png");
+	texture.loadFromFile("Tiles.png");
 	for (Platform& platform : platforms)
 	{
 		platform.setTexture(texture);
+		platform.setTextureRect(sf::IntRect(0, 9, 77, 60));
 		window->draw(platform);
 	}
 }
