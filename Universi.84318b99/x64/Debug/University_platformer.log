@@ -1,2 +1,31 @@
-﻿  klasy.cpp
+﻿  University_platformer.cpp
+  klasy.cpp
+  silnik.cpp
+C:\Users\project\university_platformer\university_platformer\silnik.cpp(81,79): warning C4244: аргумент: преобразование "T" в "float", возможна потеря данных
+C:\Users\project\university_platformer\university_platformer\silnik.cpp(81,79): warning C4244:         with
+C:\Users\project\university_platformer\university_platformer\silnik.cpp(81,79): warning C4244:         [
+C:\Users\project\university_platformer\university_platformer\silnik.cpp(81,79): warning C4244:             T=unsigned int
+C:\Users\project\university_platformer\university_platformer\silnik.cpp(81,79): warning C4244:         ]
+C:\Users\project\university_platformer\university_platformer\silnik.cpp(81,48): warning C4244: аргумент: преобразование "T" в "float", возможна потеря данных
+C:\Users\project\university_platformer\university_platformer\silnik.cpp(81,48): warning C4244:         with
+C:\Users\project\university_platformer\university_platformer\silnik.cpp(81,48): warning C4244:         [
+C:\Users\project\university_platformer\university_platformer\silnik.cpp(81,48): warning C4244:             T=unsigned int
+C:\Users\project\university_platformer\university_platformer\silnik.cpp(81,48): warning C4244:         ]
+C:\Users\project\university_platformer\university_platformer\silnik.cpp(99,11): warning C4244: инициализация: преобразование "T" в "float", возможна потеря данных
+C:\Users\project\university_platformer\university_platformer\silnik.cpp(99,11): warning C4244:         with
+C:\Users\project\university_platformer\university_platformer\silnik.cpp(99,11): warning C4244:         [
+C:\Users\project\university_platformer\university_platformer\silnik.cpp(99,11): warning C4244:             T=unsigned int
+C:\Users\project\university_platformer\university_platformer\silnik.cpp(99,11): warning C4244:         ]
+C:\Users\project\university_platformer\university_platformer\silnik.cpp(100,11): warning C4244: инициализация: преобразование "T" в "float", возможна потеря данных
+C:\Users\project\university_platformer\university_platformer\silnik.cpp(100,11): warning C4244:         with
+C:\Users\project\university_platformer\university_platformer\silnik.cpp(100,11): warning C4244:         [
+C:\Users\project\university_platformer\university_platformer\silnik.cpp(100,11): warning C4244:             T=unsigned int
+C:\Users\project\university_platformer\university_platformer\silnik.cpp(100,11): warning C4244:         ]
+C:\Users\project\university_platformer\university_platformer\silnik.cpp(111,24): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+C:\Users\project\university_platformer\university_platformer\silnik.cpp(160,119): warning C4244: аргумент: преобразование "double" в "T", возможна потеря данных
+C:\Users\project\university_platformer\university_platformer\silnik.cpp(160,119): warning C4244:         with
+C:\Users\project\university_platformer\university_platformer\silnik.cpp(160,119): warning C4244:         [
+C:\Users\project\university_platformer\university_platformer\silnik.cpp(160,119): warning C4244:             T=float
+C:\Users\project\university_platformer\university_platformer\silnik.cpp(160,119): warning C4244:         ]
+  Создание кода...
   University_platformer.vcxproj -> C:\Users\project\university_platformer\university_platformer\x64\Debug\University_platformer.exe

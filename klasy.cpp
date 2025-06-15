@@ -504,7 +504,7 @@ void Player::setTextures(float dt)
 //    }
 //}
 
-//int jumpCount = 2;
+int jumpCount = 2;
 void Player::update(float dt)
 {
 
@@ -583,7 +583,7 @@ void Player::update(float dt)
         if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Space) ||
             sf::Keyboard::isKeyPressed(sf::Keyboard::W) ||
             sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-            && canJump)// && currentState != EntityState::PushingDown && !isJumping && jumpCount > 0)
+            && canJump && currentState != EntityState::PushingDown && !isJumping && jumpCount > 0)
         {
             soundJump.play();
             //to dziala, ale problem polega na tym ze update jest wywolywany dla kazdej klatki, a wiec jumpCount zmienia sie chwilowo 
@@ -591,64 +591,64 @@ void Player::update(float dt)
             //cout << jumpCount << endl;
             velocity.y = -sqrtf(2.0f * g * h);
             //podwójny skok
-            //if (canDoubleJump)
-            //{
-            //    /*if (jumpCount < 1)
-            //    {
-            //        canJump = false;
-            //    }
-            //    else
-            //    {
-            //        canJump = true;
-            //    }*/
-            //    canJump = true;
-            //}
-            //else
-            //{
-            //    canJump = false;
-            //}
-            canJump = false;
+            if (canDoubleJump)
+            {
+                /*if (jumpCount < 1)
+                {
+                    canJump = false;
+                }
+                else
+                {
+                    canJump = true;
+                }*/
+                canJump = true;
+            }
+            else
+            {
+                canJump = false;
+            }
+   
             isOnGround = false;
       
         }
 
-        //else if ((sf::Keyboard::isKeyPressed(sf::Keyboard::S) ||
-        //    sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-        //    && canPushDown && currentState != EntityState::Jumping && !touchWalls)
-        //{
-        //    currentState = EntityState::PushingDown;
-        //    velocity.y = 1500.f;
-        //}
-        //if (touchWalls && !isOnGround && canClimbWalls) // Только если касаемся стены, не на земле, и можем лазать
-        //{
-        //    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) ||
-        //        sf::Keyboard::isKeyPressed(sf::Keyboard::Up)
-        //        && touchWalls)
-        //    {
-        //        currentState = EntityState::Idle;
-        //        velocity.y = -200.0f;
-        //        //isOnGround = false;
-        //    }
-        //    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) ||
-        //        sf::Keyboard::isKeyPressed(sf::Keyboard::Down)
-        //        && touchWalls)
-        //    {
-        //        currentState = EntityState::Idle;
-        //        velocity.y = 200.0f;
-        //        // isOnGround = false;
-        //    }
-        //}
+        else if ((sf::Keyboard::isKeyPressed(sf::Keyboard::S) ||
+            sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+            && canPushDown && currentState != EntityState::Jumping && !touchWalls)
+        {
+            currentState = EntityState::PushingDown;
+            velocity.y = 1500.f;
+        }
+        if (touchWalls && !isOnGround && canClimbWalls) 
+        {
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) ||
+                sf::Keyboard::isKeyPressed(sf::Keyboard::Up)
+                && touchWalls)
+            {
+                currentState = EntityState::Idle;
+                velocity.y = -200.0f;
+                //isOnGround = false;
+            }
+            else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) ||
+                sf::Keyboard::isKeyPressed(sf::Keyboard::Down)
+                && touchWalls)
+            {
+                currentState = EntityState::Idle;
+                velocity.y = 200.0f;
+                // isOnGround = false;
+            }
+        }
 
 
         velocity.y += g * dt;
 
 
-        //if (isOnGround)
-        //{
-        //    isJumping = false;  // Сбрасываем флаг прыжка
-        //    jumpCount = 2;      // Сбрасываем счетчик прыжков при приземлении
-        //    canJump = true;     // Разрешаем новые прыжки
-        //}
+        if (isOnGround)
+        {
+            isJumping = false; 
+            jumpCount = 2;     
+            canJump = true;    
+        }
 
 
 
@@ -676,53 +676,6 @@ void Player::update(float dt)
         velocity.y = 0.0f;
     }
     move(velocity * dt);
-
-    //switch (currentState)
-    //{
-    //case EntityState::Idle:
-    //    setTexture(*idleTexture);
-    //    animationIdle.update(0, dt, faceRight);
-    //    setTextureRect(animationIdle.uvRect);
-    //    break;
-    //case EntityState::Running:
-    //    setTexture(*runTexture);
-    //    animationRun.update(0, dt, faceRight);
-    //    setTextureRect(animationRun.uvRect);
-    //    break;
-    //case EntityState::Jumping:
-    //    setTexture(*jumpTexture);
-    //    animationJump.update(0, dt, faceRight);
-    //    setTextureRect(animationJump.uvRect);
-    //    break;
-    //case EntityState::Attacking:
-    //    animationAttack.setFinished(false);
-    //    setTexture(*attackTexture);
-    //    animationAttack.update(0, dt, faceRight);
-    //    setTextureRect(animationAttack.uvRect);
-    //    /*velocity.x = 0.0f;*/
-    //   /* velocity.y += g * dt;
-    //    move(velocity * dt);*/
-    //    if (animationAttack.isFinished())
-    //    {
-    //        currentState = EntityState::Idle;
-    //    }
-    //    break;
-    //case EntityState::Dying:
-    //    animationDead.setFinished(false);
-    //    setTexture(*deadTexture);
-    //    animationDead.update(0, dt, faceRight);
-    //    setTextureRect(animationDead.uvRect);
-    //    if (animationAttack.isFinished())
-    //    {
-    //        currentState = EntityState::Idle;
-    //    }
-    //    break;
-    //case EntityState::PushingDown:
-    //    setTexture(*pushTexture);
-    //    animationPushDown.update(0, dt, faceRight);
-    //    setTextureRect(animationPushDown.uvRect);
-    //    break;
-    //}
 }
 
 Enemy::Enemy(vector<sf::Texture*> textures, sf::Vector2f position) :
