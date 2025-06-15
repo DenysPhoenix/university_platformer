@@ -6,6 +6,7 @@
 #include <cmath>
 #include <string>
 #include <sstream>
+#include <algorithm>
 
 
 // konstruktor i destruktor
@@ -46,12 +47,14 @@ void Silnik::inicjalizacjaOkna()
 
 void Silnik::spawnPlayer()
 {
-	sf::Texture heroIdle, heroRun, heroJump, heroAttack, heroDead;
+	//tektury
+	sf::Texture heroIdle, heroRun, heroJump, heroAttack, heroDead, heroPushDown;
     heroIdle.loadFromFile("grafiki/hero-Idle.png");
     heroRun.loadFromFile("grafiki/hero-Run.png");
     heroJump.loadFromFile("grafiki/hero-Jump.png");
     heroAttack.loadFromFile("grafiki/hero-Attack.png");
     heroDead.loadFromFile("grafiki/hero-Dead.png");
+	heroPushDown.loadFromFile("grafiki/hero-PushDown.png");
 
     vector<sf::Texture*> player_textures;
     player_textures.emplace_back(&heroIdle);
@@ -59,7 +62,23 @@ void Silnik::spawnPlayer()
     player_textures.emplace_back(&heroJump);
     player_textures.emplace_back(&heroAttack);
     player_textures.emplace_back(&heroDead);
-	player = new Player(player_textures, sf::Vector2f(400.f, 325.f));
+	player_textures.emplace_back(&heroPushDown);
+
+	//dzwieki
+	sf::SoundBuffer PlayerRun, PlayerJump, PlayerAttack, PlayerDie;
+	PlayerRun.loadFromFile("dzwieki/soundRunHero.mp3");
+	PlayerJump.loadFromFile("dzwieki/soundJump.mp3");
+	PlayerAttack.loadFromFile("dzwieki/soundAttackHero.mp3");
+	PlayerDie.loadFromFile("dzwieki/soundDieHero.mp3");
+
+	vector<sf::SoundBuffer*> player_sounds;
+	player_sounds.emplace_back(&PlayerRun);
+	player_sounds.emplace_back(&PlayerJump);
+	player_sounds.emplace_back(&PlayerAttack);
+	player_sounds.emplace_back(&PlayerDie);
+
+
+	player = new Player(player_textures,player_sounds, sf::Vector2f(400.f, 325.f));
 	player->setPosition(orient_x,orient_y);
 	if (poz_y == -7 && poz_x == 6) {
 		player->setPosition(640, 200);
@@ -68,8 +87,13 @@ void Silnik::spawnPlayer()
 
 void Silnik::spawnEnemy()
 {
-	//Bee przeciwnik(sf::Vector2f(window->getSize().x * 0.9 , 0));
-	//enemies.push_back(przeciwnik);
+	/*vector<unique_ptr<Enemy>> enemies;
+	enemies.emplace_back(make_unique<Boar>(boar_textures, boar_sounds, sf::Vector2f(950.f, 325.f)));*/
+	// enemies.emplace_back(make_unique<Bee>(bee_textures, bee_sounds, sf::Vector2f(600.f, 150.f)));
+
+
+	/*Bee przeciwnik(sf::Vector2f(window->getSize().x * 0.9 , 0));
+	enemies.push_back(przeciwnik);*/
 }
 
 void Silnik::spawnBackground()
@@ -78,6 +102,14 @@ void Silnik::spawnBackground()
 	sf::Sprite pl;
 	float x1 = this->window->getSize().x;
 	float y1 = this->window->getSize().y;
+
+	sf::IntRect drzewo = sf::IntRect(160, 0, 30, 120);
+	sf::IntRect most = sf::IntRect(80, 114, 82, 45);
+	sf::IntRect woda = sf::IntRect(95, 300, 40, 34);
+	sf::IntRect platforma = sf::IntRect(0, 9, 77, 83);
+
+
+	if (poz_y == 1)
 	if (poz_y == -7 && poz_x == 6)
 	{
 		pl.setTextureRect(sf::IntRect(64, 160, 30, 30));
@@ -439,7 +471,7 @@ void Silnik::statistics()
 	std::ostringstream ss;
 	ss << "(" << poz_x << ", " << poz_y << ")";
 	text.setString(ss.str());
-	if (poz_y == 1)
+	if (poz_y >= 1)
 	{
 		this->tlo = new sf::Color(255, 186, 0, 0);
 	}
@@ -510,8 +542,6 @@ void Silnik::aktualizacjaPlayer()
 		if (player->GetCollider().intersects(platform.GetCollider()))
 		{
 			player->OnCollision(platform, dt);
-			// Если платформа должна реагировать на игрока, то раскомментируйте:
-			// platform.OnCollision(hero, dt);
 		}
 	}
 	if (player->getPosition().x > this->window->getSize().x)
@@ -615,6 +645,8 @@ void Silnik::wyswietlPlayer()
 	//sf::Texture texture;
 	//texture.loadFromFile("idle_knight_1.png");
 	sf::Texture hero;
+	sf::SoundBuffer Play;
+	
 	switch (player->GetCurrentState())
 	{
 	case EntityState::Idle:
@@ -631,6 +663,9 @@ void Silnik::wyswietlPlayer()
 		break;
 	case EntityState::Dying:
 		hero.loadFromFile("grafiki/hero-Dead.png");
+		break;
+	case EntityState::PushingDown:
+		hero.loadFromFile("grafiki/hero-PushDown.png");
 		break;
 	}
 	//hero.loadFromFile("grafiki/hero-Idle.png");
@@ -725,3 +760,5 @@ Poziom::Poziom(sf::Sprite p1, std::vector<sf::Sprite> v2, std::vector<sf::Sprite
 Poziom::~Poziom()
 {
 }
+
+

@@ -1,6 +1,35 @@
-﻿  Trwa generowanie kodu
-  0 of 5 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    0 functions had inline decision re-evaluated but remain unchanged
-  Zakończono generowanie kodu
-  University_platformer.vcxproj -> C:\projects\University_platformer\x64\Release\University_platformer.exe
+﻿  University_platformer.cpp
+  klasy.cpp
+  silnik.cpp
+C:\Users\project\university_platformer\university_platformer\silnik.cpp(81,79): warning C4244: аргумент: преобразование "T" в "float", возможна потеря данных
+C:\Users\project\university_platformer\university_platformer\silnik.cpp(81,79): warning C4244:         with
+C:\Users\project\university_platformer\university_platformer\silnik.cpp(81,79): warning C4244:         [
+C:\Users\project\university_platformer\university_platformer\silnik.cpp(81,79): warning C4244:             T=unsigned int
+C:\Users\project\university_platformer\university_platformer\silnik.cpp(81,79): warning C4244:         ]
+C:\Users\project\university_platformer\university_platformer\silnik.cpp(81,48): warning C4244: аргумент: преобразование "T" в "float", возможна потеря данных
+C:\Users\project\university_platformer\university_platformer\silnik.cpp(81,48): warning C4244:         with
+C:\Users\project\university_platformer\university_platformer\silnik.cpp(81,48): warning C4244:         [
+C:\Users\project\university_platformer\university_platformer\silnik.cpp(81,48): warning C4244:             T=unsigned int
+C:\Users\project\university_platformer\university_platformer\silnik.cpp(81,48): warning C4244:         ]
+C:\Users\project\university_platformer\university_platformer\silnik.cpp(99,11): warning C4244: инициализация: преобразование "T" в "float", возможна потеря данных
+C:\Users\project\university_platformer\university_platformer\silnik.cpp(99,11): warning C4244:         with
+C:\Users\project\university_platformer\university_platformer\silnik.cpp(99,11): warning C4244:         [
+C:\Users\project\university_platformer\university_platformer\silnik.cpp(99,11): warning C4244:             T=unsigned int
+C:\Users\project\university_platformer\university_platformer\silnik.cpp(99,11): warning C4244:         ]
+C:\Users\project\university_platformer\university_platformer\silnik.cpp(100,11): warning C4244: инициализация: преобразование "T" в "float", возможна потеря данных
+C:\Users\project\university_platformer\university_platformer\silnik.cpp(100,11): warning C4244:         with
+C:\Users\project\university_platformer\university_platformer\silnik.cpp(100,11): warning C4244:         [
+C:\Users\project\university_platformer\university_platformer\silnik.cpp(100,11): warning C4244:             T=unsigned int
+C:\Users\project\university_platformer\university_platformer\silnik.cpp(100,11): warning C4244:         ]
+C:\Users\project\university_platformer\university_platformer\silnik.cpp(111,24): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+C:\Users\project\university_platformer\university_platformer\silnik.cpp(160,119): warning C4244: аргумент: преобразование "double" в "T", возможна потеря данных
+C:\Users\project\university_platformer\university_platformer\silnik.cpp(160,119): warning C4244:         with
+C:\Users\project\university_platformer\university_platformer\silnik.cpp(160,119): warning C4244:         [
+C:\Users\project\university_platformer\university_platformer\silnik.cpp(160,119): warning C4244:             T=float
+C:\Users\project\university_platformer\university_platformer\silnik.cpp(160,119): warning C4244:         ]
+  Создание кода
+  104 of 441 functions (23.6%) were compiled, the rest were copied from previous compilation.
+    70 functions were new in current compilation
+    71 functions had inline decision re-evaluated but remain unchanged
+  Создание кода завершено
+  University_platformer.vcxproj -> C:\Users\project\university_platformer\university_platformer\x64\Release\University_platformer.exe
