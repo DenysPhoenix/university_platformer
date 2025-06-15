@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "SFML/Graphics.hpp"
+#include <SFML/Audio.hpp>
 #include <vector>
 #include <algorithm>
 #include <iostream>
@@ -59,17 +60,17 @@ private:
     bool finished;
 };
 
-
 enum class EntityState
 {
     //stany ogólne
     Idle,
     Running,
     Attacking,
-    Hitted,
 
     //stany osobliwe dla Player
     Jumping,
+    PushingDown,
+    PushingHorizontal,
     Dying,
 
     //stany osobliwe dla Enemy
@@ -102,7 +103,6 @@ protected:
     bool faceRight;
     EntityState currentState;
 };
-
 
 enum class PlatformType
 {
@@ -147,7 +147,7 @@ class Player : public Entity
 {
 public:
     //metody
-    Player(vector<sf::Texture*> textures, sf::Vector2f position);
+    Player(vector<sf::Texture*> textures, vector<sf::SoundBuffer*> sounds, sf::Vector2f position);
 
     EntityState GetCurrentState() const { return currentState; };
 
@@ -160,8 +160,6 @@ public:
     bool HasAttackedThisFrame() const { return hasAttackedThisFrame; }
 
     bool IsInvulnerable() const { return invulnerabilityTimer > 0; }
-
-    //void PlayerCheckPlatformCollision(std::vector<Platform>& platforms/*, std::vector<Enemy>& enemies*/, float dt);
 
     void OnCollision(Entity& other, float dt);
 
@@ -185,11 +183,11 @@ public:
         cout << "Player Po: " << hp << endl;
 
         //if (hp <= 0) {
-        //    hp = 0; // Убедимся, что HP не уходит в минус
-        //    // Здесь можно переключить состояние на Dying, если еще не
+        //    hp = 0;
+        //    
         //    if (currentState != EntityState::Dying) {
         //        currentState = EntityState::Dying;
-        //        animationDead.reset(); // Сброс анимации смерти
+        //        animationDead.reset();
         //    }
         //}
     }
@@ -197,6 +195,8 @@ public:
     void SetInvulnerable(float duration) { invulnerabilityTimer = duration; }
 
     void update(float dt);
+
+    bool touchWalls;
 
     ~Player();
 public:
@@ -207,6 +207,11 @@ private:
     //wlasnosci fizyczne
     sf::Vector2f velocity;
     float h, g, hp, damage;
+
+    //powerupy
+    bool canDoubleJump;
+    bool canClimbWalls;
+    bool canPushDown;
 
     //wlasnosci oddzialywania na inne Entity
     bool canJump, isOnGround, hasAttackedThisFrame;
@@ -222,12 +227,21 @@ private:
     sf::Texture* attackTexture;
     sf::Texture* deadTexture;
 
+    sf::Texture* pushTexture;
+
     //animacje dla roznych stanow
     Animation animationIdle;
     Animation animationRun;
     Animation animationJump;
     Animation animationAttack;
     Animation animationDead;
+
+    Animation animationPushDown;
+
+    bool isJumping = false;
+    sf::Sound soundJump;
+    sf::Sound soundAttack;
+    sf::Sound soundRun;
 };
 
 class Enemy :public Entity
@@ -241,7 +255,6 @@ public:
 
     virtual bool IsFlying() const { return false; };
 
-    //void CheckPlatformCollision(std::vector<Platform>& platforms, Player& player, float dt);
     void OnCollision(Entity& other, float dt);
 
     void SetHP(float dHP)
@@ -258,8 +271,8 @@ public:
         cout << "Enemy Po: " << hp << endl;
         //if (hp <= 0) {
         //    hp = 0;
-        //    // if (currentState != EntityState::Dying) { // Изменение: EntityState
-        //    //     currentState = EntityState::Dying; // Если есть анимация смерти для врагов
+        //    // if (currentState != EntityState::Dying) { 
+        //    //     currentState = EntityState::Dying;
         //    // }
         //}
     }
@@ -288,7 +301,7 @@ protected:
 class Boar :public Enemy
 {
 public:
-    Boar(vector<sf::Texture*> textures, sf::Vector2f pos);
+    Boar(vector<sf::Texture*> textures, vector<sf::SoundBuffer*> sounds, sf::Vector2f pos);
 
     void Update(float dt, Player& player);
     void update(float dt) {};
@@ -314,12 +327,13 @@ private:
     Animation animationRun;
     Animation animationHit;
 
+    sf::Sound soundAttacking;
 };
 
 class Bee :public Enemy
 {
 public:
-    Bee(vector<sf::Texture*> textures, sf::Vector2f pos);
+    Bee(vector<sf::Texture*> textures, vector<sf::SoundBuffer*> sounds, sf::Vector2f pos);
 
     bool isFlying() const { return true; }
 
@@ -342,4 +356,6 @@ private:
     Animation animationFly;
     Animation animationAttack;
     Animation animationHit;
+
+    sf::Sound soundBuzzing;
 };

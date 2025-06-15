@@ -6,6 +6,7 @@
 #include <cmath>
 #include <string>
 #include <sstream>
+#include <algorithm>
 
 
 // konstruktor i destruktor
@@ -46,12 +47,14 @@ void Silnik::inicjalizacjaOkna()
 
 void Silnik::spawnPlayer()
 {
-	sf::Texture heroIdle, heroRun, heroJump, heroAttack, heroDead;
+	//tektury
+	sf::Texture heroIdle, heroRun, heroJump, heroAttack, heroDead, heroPushDown;
     heroIdle.loadFromFile("grafiki/hero-Idle.png");
     heroRun.loadFromFile("grafiki/hero-Run.png");
     heroJump.loadFromFile("grafiki/hero-Jump.png");
     heroAttack.loadFromFile("grafiki/hero-Attack.png");
     heroDead.loadFromFile("grafiki/hero-Dead.png");
+	heroPushDown.loadFromFile("grafiki/hero-PushDown.png");
 
     vector<sf::Texture*> player_textures;
     player_textures.emplace_back(&heroIdle);
@@ -59,14 +62,34 @@ void Silnik::spawnPlayer()
     player_textures.emplace_back(&heroJump);
     player_textures.emplace_back(&heroAttack);
     player_textures.emplace_back(&heroDead);
-	player = new Player(player_textures, sf::Vector2f(400.f, 325.f));
+	player_textures.emplace_back(&heroPushDown);
+
+	//dzwieki
+	sf::SoundBuffer PlayerRun, PlayerJump, PlayerAttack, PlayerDie;
+	PlayerRun.loadFromFile("dzwieki/soundRunHero.mp3");
+	PlayerJump.loadFromFile("dzwieki/soundJump.mp3");
+	PlayerAttack.loadFromFile("dzwieki/soundAttackHero.mp3");
+	PlayerDie.loadFromFile("dzwieki/soundDieHero.mp3");
+
+	vector<sf::SoundBuffer*> player_sounds;
+	player_sounds.emplace_back(&PlayerRun);
+	player_sounds.emplace_back(&PlayerJump);
+	player_sounds.emplace_back(&PlayerAttack);
+	player_sounds.emplace_back(&PlayerDie);
+
+	player = new Player(player_textures, player_sounds, sf::Vector2f(400.f, 325.f));
 	player->setPosition(this->window->getSize().x / 8, this->window->getSize().y / 2);
 }
 
 void Silnik::spawnEnemy()
 {
-	//Bee przeciwnik(sf::Vector2f(window->getSize().x * 0.9 , 0));
-	//enemies.push_back(przeciwnik);
+	/*vector<unique_ptr<Enemy>> enemies;
+	enemies.emplace_back(make_unique<Boar>(boar_textures, boar_sounds, sf::Vector2f(950.f, 325.f)));*/
+	// enemies.emplace_back(make_unique<Bee>(bee_textures, bee_sounds, sf::Vector2f(600.f, 150.f)));
+
+
+	/*Bee przeciwnik(sf::Vector2f(window->getSize().x * 0.9 , 0));
+	enemies.push_back(przeciwnik);*/
 }
 
 void Silnik::spawnBackground()
@@ -75,16 +98,23 @@ void Silnik::spawnBackground()
 	sf::Sprite pl;
 	float x1 = this->window->getSize().x;
 	float y1 = this->window->getSize().y;
+
+	sf::IntRect drzewo = sf::IntRect(160, 0, 30, 120);
+	sf::IntRect most = sf::IntRect(80, 114, 82, 45);
+	sf::IntRect woda = sf::IntRect(95, 300, 40, 34);
+	sf::IntRect platforma = sf::IntRect(0, 9, 77, 83);
+
+
 	if (poz_y == 1)
 	{
-		pl.setTextureRect(sf::IntRect(100, 300, 40, 34));
+		pl.setTextureRect(woda);
 		pl.setPosition(0, y1 * 0.9);
 		pl.setScale(100, 3);
 		this->backgrounds.push_back(pl);
 	}
 	if (poz_x == 2 && poz_y == 1)
 	{
-		for (size_t i = 0; i < 3; i++)
+		/*for (size_t i = 0; i < 3; i++)
 		{
 			pl.setPosition(x1 / 9 * (1 + (i * 3)), y1 / 4 * 3);
 			pl.setScale(4, 4);
@@ -93,7 +123,11 @@ void Silnik::spawnBackground()
 		}
 		pl.setPosition(x1 / 9 * 8, 0);
 		pl.setTextureRect(sf::IntRect(160, 0, 30, 120));
-		pl.setScale(4, 4);
+		pl.setScale(4, 4);*/
+
+		pl.setPosition(400.0f, 600.0f);
+		pl.setTextureRect(drzewo);
+		pl.setScale(2, 2);
 		this->backgrounds.push_back(pl);
 		
 	}
@@ -103,24 +137,37 @@ void Silnik::spawnBackground()
 		{
 			pl.setPosition(x1 / 9 * (1 + (i)), y1 / 4 * 3);
 			pl.setScale(2, 2);
-			pl.setTextureRect(sf::IntRect(0, 9, 77, 83));
+			pl.setTextureRect(platforma);
 			this->backgrounds.push_back(pl);
 		}
 	}
-	
+	else if (poz_x == 4 && poz_y == 1)
+	{
+
+	}
 }
 
 void Silnik::spawnPlatforms()
 {
+	platforms.erase(platforms.begin(), platforms.end());
+
 	sf::Texture staticTex;
-	staticTex.loadFromFile("grafiki/static.png");
-	for (int i = 0; i < 10; i++)
+	staticTex.loadFromFile("Tiles.png");
+	if (poz_y == 1)
 	{
-		platforms.emplace_back(Platform(&staticTex, sf::Vector2f(100.f, 75.f), sf::Vector2f(i * 100.f,window->getSize().y * 0.9), PlatformType::Static));
+		for (int i = 0; i < 10; i++)
+		{
+			platforms.emplace_back(Platform(&staticTex, sf::Vector2f(100.f, 75.f), sf::Vector2f(i * 100.f, window->getSize().y * 0.9), PlatformType::Static));
+		}
 	}
-	
-    //platforms.emplace_back(Platform(&staticTex, sf::Vector2f(100.f, 75.f), sf::Vector2f(200.f, 400.f), PlatformType::Static));
-   
+	if (poz_x == 2 && poz_y == 1)
+	{
+
+	}
+	/*for (int i = 0; i < 10; i++)
+	{
+		platforms.emplace_back(Platform(&staticTex, sf::Vector2f(100.f, 75.f), sf::Vector2f(window->getSize().y * 0.9, i * 100.f), PlatformType::Static));
+	}*/
 }
 
 void Silnik::statistics()
@@ -198,8 +245,6 @@ void Silnik::aktualizacjaPlayer()
 		if (player->GetCollider().intersects(platform.GetCollider()))
 		{
 			player->OnCollision(platform, dt);
-			// Если платформа должна реагировать на игрока, то раскомментируйте:
-			// platform.OnCollision(hero, dt);
 		}
 	}
 	if (player->getPosition().x > this->window->getSize().x)
@@ -312,6 +357,9 @@ void Silnik::wyswietlPlayer()
 	case EntityState::Dying:
 		hero.loadFromFile("grafiki/hero-Dead.png");
 		break;
+	case EntityState::PushingDown:
+		hero.loadFromFile("grafiki/hero-PushDown.png");
+		break;
 	}
 	//hero.loadFromFile("grafiki/hero-Idle.png");
 	player->setTexture(hero);
@@ -326,7 +374,8 @@ void Silnik::wyswietlEnemies()
 void Silnik::wyswietlPlatform()
 {
 	sf::Texture texture;
-	texture.loadFromFile("grafiki/static.png");
+	texture.loadFromFile("Tiles.png");
+	//texture.loadFromFile("grafiki/static.png");
 	for (Platform& platform : platforms)
 	{
 		platform.setTexture(texture);
