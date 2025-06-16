@@ -103,7 +103,7 @@ void Silnik::inicjalizacjaOkna()
 void Silnik::spawnPlayer()
 {
 	//tektury
-	//sf::Texture heroIdle, heroRun, heroJump, heroAttack, heroDead, heroPushDown;
+
 	heroIdle.loadFromFile("hero-Idle.png");
 	heroRun.loadFromFile("hero-Run.png");
 	heroJump.loadFromFile("hero-Jump.png");
@@ -111,7 +111,7 @@ void Silnik::spawnPlayer()
 	heroDead.loadFromFile("hero-Dead.png");
 	heroPushDown.loadFromFile("hero-PushDown.png");
 
-	//vector<sf::Texture*> player_textures;
+	
 	player_textures.emplace_back(&heroIdle);
 	player_textures.emplace_back(&heroRun);
 	player_textures.emplace_back(&heroJump);
@@ -120,30 +120,22 @@ void Silnik::spawnPlayer()
 	player_textures.emplace_back(&heroPushDown);
 
 	//dzwieki
-	//sf::SoundBuffer PlayerRun, PlayerJump, PlayerAttack, PlayerDie;
+	
 	PlayerRun.loadFromFile("soundRunHero.mp3");
 	PlayerJump.loadFromFile("soundJump.mp3");
 	PlayerAttack.loadFromFile("soundAttackHero.mp3");
 	PlayerDie.loadFromFile("soundDieHero.mp3");
 
-	////vector<sf::SoundBuffer*> player_sounds;
 	player_sounds.emplace_back(&PlayerRun);
 	player_sounds.emplace_back(&PlayerJump);
 	player_sounds.emplace_back(&PlayerAttack);
 	player_sounds.emplace_back(&PlayerDie);
 
-	//std::vector<sf::SoundBuffer> permanent_player_sounds; // Используем const sf::SoundBuffer*
-	//permanent_player_sounds.emplace_back(PlayerRun);
-	//permanent_player_sounds.emplace_back(PlayerJump);
-	//permanent_player_sounds.emplace_back(PlayerAttack);
-	//permanent_player_sounds.emplace_back(PlayerDie);
-
-
 	player = new Player(player_textures, player_sounds, sf::Vector2f(400.f, 325.f));
 	hitboxPlayer.setSize(sf::Vector2f(64.0f, 48.0f));
 	hitboxPlayer.setOrigin(32.0f, 10.0f);
 	hitboxPlayer.setFillColor(sf::Color(0, 0, 0, 0));
-	//hitboxPlayer.setFillColor(sf::Color::Red);
+
 	player->setPosition(orient_x, orient_y);
 	if (poz_y == -7 && poz_x == 6) {
 		player->setPosition(640, 200);
@@ -225,8 +217,6 @@ void Silnik::spawnPlatforms()
 	float x1 = this->window->getSize().x;
 	float y1 = this->window->getSize().y;
 	Platform pl(&staticTex, sf::Vector2f(200.f, 175.f), sf::Vector2f(0, 0), PlatformType::Static);
-	Platform lev(&levTex, sf::Vector2f(2000.f, 175.f), sf::Vector2f(1000, 800), PlatformType::Levitating);
-	platforms.emplace_back(lev);
 
 	if (poz_x == 0 && poz_y == 0)
 	{
@@ -519,7 +509,6 @@ void Silnik::spawnPlatforms()
 		inicjalizacjaZmiennych();
 	}
 
-
 	//platforms.emplace_back(Platform(&staticTex, sf::Vector2f(100.f, 75.f), sf::Vector2f(200.f, 400.f), PlatformType::Static));
 
 }
@@ -573,6 +562,14 @@ void Silnik::aktualizacjaEvents()
 
 void Silnik::aktualizacjaPlayer()
 {
+	if (player->GetState() == EntityState::Dying)
+	{
+		poz_x = 0;
+		poz_y = 0;
+		orient_x = 240;
+		orient_y = 270;
+		inicjalizacjaZmiennych();
+	}
 	hitboxPlayer.setPosition(player->GetPosition());
 	player->update(dt);
 	/*player->ResetAttackFlag();

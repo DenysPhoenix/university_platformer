@@ -271,20 +271,15 @@ void Player::setTextures(float dt)
             currentState = EntityState::Idle;
         }
         break;
-    case EntityState::Dying:
-        animationDead.setFinished(false);
-        animationDead.update(0, dt, faceRight);
-        setTextureRect(animationDead.uvRect);
-        if (animationAttack.isFinished())
-        {
-            currentState = EntityState::Idle;
-        }
-        break;
-   /* case EntityState::PushingDown:
-        setTexture(*pushTexture);
-        animationPushDown.update(0, dt, faceRight);
-        setTextureRect(animationPushDown.uvRect);
-        break;*/
+    //case EntityState::Dying:
+    //    animationDead.setFinished(false);
+    //    animationDead.update(0, dt, faceRight);
+    //    setTextureRect(animationDead.uvRect);
+    //    if (animationAttack.isFinished())
+    //    {
+    //        currentState = EntityState::Idle;
+    //    }
+    //    break;
     }
 }
 
@@ -396,180 +391,6 @@ void Player::update(float dt)
     move(velocity * dt);
 }
 
-//int jumpCount = 2;
-//void Player::update(float dt)
-//{
-//
-//    //cout << "jumpCount" << jumpCount << endl;
-//
-//    if (invulnerabilityTimer > 0)
-//    {
-//        invulnerabilityTimer -= dt;
-//    }
-//
-//    if (attackCooldown > 0)
-//    {
-//        attackCooldown -= dt;
-//    }
-//
-//    if (sf::Keyboard::isKeyPressed(sf::Keyboard::J) && attackCooldown <= 0) // 
-//    {
-//        currentState = EntityState::Attacking;
-//        soundAttack.play();
-//        hasAttackedThisFrame = true;
-//        attackCooldown = ATTACK_COOLDOWN_MAX;
-//        animationAttack.reset();
-//    }
-//
-//    if (hp <= 0.001)
-//    {
-//        currentState = EntityState::Dying;
-//        //animationDead.reset();
-//        //soundAttack.setPlayingOffset(sf::seconds(5.f));
-//    }
-//
-//    if (currentState != EntityState::Dying) // && currentState != EntityState::Attacking
-//    {
-//        //obowiazkowy
-//        velocity.x = 0.0f;
-//
-//        bool currentlyPressingMoveKey = false;
-//        // poruszanie sie w lewo
-//        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) ||
-//            sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-//        {
-//            currentlyPressingMoveKey = true;
-//            velocity.x = -speed;
-//            faceRight = false;
-//        }
-//
-//        // poruszanie sie w prawo
-//        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) ||
-//            sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-//        {
-//            currentlyPressingMoveKey = true;
-//            velocity.x = speed;
-//            faceRight = true;
-//        }
-//        if (currentlyPressingMoveKey && velocity.x != 0 && isOnGround)
-//        {
-//            if (soundRun.getStatus() != sf::Sound::Playing)
-//            {
-//                soundRun.play();
-//                soundRun.setPlayingOffset(sf::seconds(2.f));
-//            }
-//        }
-//        else
-//        {
-//            if (soundRun.getStatus() == sf::Sound::Playing)
-//            {
-//                soundRun.stop();
-//            }
-//        }
-//
-//
-//        // skok
-//        if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Space) ||
-//            sf::Keyboard::isKeyPressed(sf::Keyboard::W) ||
-//            sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-//            && canJump && currentState != EntityState::PushingDown && !isJumping && jumpCount > 0)
-//        {
-//            soundJump.play();
-//            //to dziala, ale problem polega na tym ze update jest wywolywany dla kazdej klatki, a wiec jumpCount zmienia sie chwilowo 
-//            //jumpCount--;
-//            //cout << jumpCount << endl;
-//            velocity.y = -sqrtf(2.0f * g * h);
-//            //podwójny skok
-//            if (canDoubleJump)
-//            {
-//                /*if (jumpCount < 1)
-//                {
-//                    canJump = false;
-//                }
-//                else
-//                {
-//                    canJump = true;
-//                }*/
-//                canJump = true;
-//            }
-//            else
-//            {
-//                canJump = false;
-//            }
-//   
-//            isOnGround = false;
-//      
-//        }
-//
-//        else if ((sf::Keyboard::isKeyPressed(sf::Keyboard::S) ||
-//            sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-//            && canPushDown && currentState != EntityState::Jumping && !touchWalls)
-//        {
-//            currentState = EntityState::PushingDown;
-//            velocity.y = 1500.f;
-//        }
-//        if (touchWalls && !isOnGround && canClimbWalls) 
-//        {
-//            if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) ||
-//                sf::Keyboard::isKeyPressed(sf::Keyboard::Up)
-//                && touchWalls)
-//            {
-//                currentState = EntityState::Idle;
-//                velocity.y = -200.0f;
-//                //isOnGround = false;
-//            }
-//            else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) ||
-//                sf::Keyboard::isKeyPressed(sf::Keyboard::Down)
-//                && touchWalls)
-//            {
-//                currentState = EntityState::Idle;
-//                velocity.y = 200.0f;
-//                // isOnGround = false;
-//            }
-//        }
-//
-//
-//        velocity.y += g * dt;
-//
-//
-//        if (isOnGround)
-//        {
-//            isJumping = false; 
-//            jumpCount = 2;     
-//            canJump = true;    
-//        }
-//
-//
-//
-//
-//
-//        if (!isOnGround)
-//        {
-//            if (currentState != EntityState::PushingDown)
-//            {
-//                if (velocity.y < 0.0f) currentState = EntityState::Jumping; //830.0f
-//                else currentState = EntityState::Idle;
-//            }
-//        }
-//        else
-//        {
-//            if (std::abs(velocity.x) > 0.0f) currentState = EntityState::Running;
-//            else currentState = EntityState::Idle;
-//        }
-//    }
-//    /*else if (currentState == EntityState::Attacking)
-//    {
-//        velocity.x = 0.0f;
-//    }
-//
-//    else if (currentState == EntityState::Dying)
-//    {
-//        velocity.x = 0.0f;
-//        velocity.y = 0.0f;
-//    }*/
-//
-//    
-//}
 
 Enemy::Enemy(vector<sf::Texture*> textures, sf::Vector2f position) :
     Entity(position),
@@ -632,14 +453,6 @@ void Enemy::OnCollision(Entity& other, float dt)
     Player* player = dynamic_cast<Player*>(&other);
     if (player)
     {
-        // sf::Vector2f playerPos = player->GetPosition();
-        // sf::Vector2f enemyPos = GetPosition();
-
-        // float currentDistanceX = abs(playerPos.x - enemyPos.x);
-        // float currentDistanceY = std::abs(playerPos.y - enemyPos.y);
-        //// if (sqrt(pow(currentDistanceX, 2) + pow(currentDistanceY,2)) <= TOUCH_RANGE)
-        // if (currentDistanceX ==0 ) /*<= TOUCH_RANGE && currentDistanceY <= TOUCH_RANGE)*/
-        // {
         if (player->GetState() == EntityState::Attacking && player->HasAttackedThisFrame() && !IsInvulnerable())
         {
             SetHP(player->GetDamage());
@@ -686,110 +499,7 @@ Boar::~Boar()
 {
 }
 
-//void Boar::Update(float dt, Player& player)
-//{
-//    if (invulnerabilityTimer > 0)
-//    {
-//        invulnerabilityTimer -= dt;
-//    }
-//
-//    if (hp <= 0.0f)
-//    {
-//        if (currentState != EntityState::Hitted)
-//        {
-//            currentState = EntityState::Hitted;
-//            animationHit.reset();
-//        }
-//    }
-//
-//    sf::Vector2f playerPos = player.GetPosition();
-//    sf::Vector2f enemyPos = GetPosition();
-//
-//    velocity.y += g * dt;
-//    move(velocity * dt);
-//
-//    /* if (std::abs(velocity.x) > 0.0f) {
-//        currentState = EnemyState::Running;
-//    }
-//    else {
-//        currentState = EnemyState::Idle;
-//    }*/
-//
-//    //zachowanie sie
-//    if (currentState != EntityState::Hitted)
-//    {
-//        float distanceX = std::abs(playerPos.x - enemyPos.x);
-//
-//        /*if (distanceX < ATTACK_RANGE && std::abs(playerPos.y - enemyPos.y) < GetCollider().height / 2.0f + player.GetCollider().height / 2.0f)*/
-//        if (distanceX < CHASE_RANGE)
-//        {
-//            currentState = EntityState::Running;
-//            if (playerPos.x < enemyPos.x)
-//            {
-//                velocity.x = -RUN_SPEED;
-//                faceRight = true;
-//            }
-//            else
-//            {
-//                velocity.x = RUN_SPEED;
-//                faceRight = false;
-//            }
-//        }
-//        else if (distanceX == 0.0)
-//        {
-//            velocity.x = 0;
-//            faceRight = true;
-//        }
-//        else
-//        {
-//            currentState = EntityState::Walking;
-//            if (faceRight)
-//            {
-//                velocity.x = -WALK_SPEED;
-//            }
-//            else
-//            {
-//                velocity.x = WALK_SPEED;
-//            }
-//        }
-//    }
-//    else
-//    {
-//        velocity.x = 0.0f;
-//        velocity.y = 0.0f;
-//    }
-//
-//    //animacja na podstawie stanu
-//    switch (currentState)
-//    {
-//    case EntityState::Running:
-//        setTexture(*runTexture);
-//        animationRun.update(0, dt, faceRight);
-//        setTextureRect(animationRun.uvRect);
-//        // velocity.x = -200.0f;
-//        break;
-//    case EntityState::Idle:
-//        setTexture(*idleTexture);
-//        animationIdle.update(0, dt, faceRight);
-//        setTextureRect(animationIdle.uvRect);
-//        break;
-//    case EntityState::Walking:
-//        setTexture(*walkTexture);
-//        animationWalk.update(0, dt, faceRight);
-//        setTextureRect(animationWalk.uvRect);
-//        break;
-//    case EntityState::Hitted:
-//        animationHit.setFinished(false);
-//        setTexture(*hitTexture);
-//        animationHit.update(0, dt, faceRight);
-//        setTextureRect(animationHit.uvRect);
-//        if (animationHit.isFinished())
-//        {
-//            currentState = EntityState::Idle;
-//        }
-//        break;
-//    }
-//}
+
 
 void Boar::Update(float dt, Player& player) {
     if (invulnerabilityTimer > 0) invulnerabilityTimer -= dt;
