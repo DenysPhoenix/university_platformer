@@ -35,10 +35,27 @@ private:
 	sf::Color* tlo;
 	sf::Clock clock;
 
+	//obsluga gracza
+
 	sf::Texture heroIdle, heroRun, heroJump, heroAttack, heroDead, heroPushDown;
 	vector<sf::Texture*> player_textures;
 	sf::SoundBuffer PlayerRun, PlayerJump, PlayerAttack, PlayerDie;
 	vector<sf::SoundBuffer*> player_sounds;
+	sf::RectangleShape hitboxPlayer;
+
+	//obsluga Enemy
+
+	//obsluga dzika
+	sf::SoundBuffer bufferBoar;
+	vector<sf::SoundBuffer*> boar_sounds;
+	sf::Texture boarIdle, boarWalk, boarRun, boarHit;
+	vector<sf::Texture*> boar_textures;
+	vector<unique_ptr<Enemy>> enemies;
+
+	//obsluga osy
+	sf::SoundBuffer beeBuzzing;
+	sf::Texture beeFly, beeAttack, beeHit;
+	vector<sf::Texture*> bee_textures;
 
 	// tu takie zasady dzialania gry 
 	bool playerAlive;
@@ -46,7 +63,7 @@ private:
 	float enemySpawnTimer;
 	float enemySpawnTimerMAX;
 	float dt;
-	int poz_x = 0;
+	int poz_x = 1;
 	int poz_y = 0;
 	int orient_x = 240;
 	int orient_y = 270;
@@ -58,7 +75,6 @@ private:
 	std::vector<Platform> platforms;
 	sf::Text text;
 
-
 	// prywatne funkcje 
 	void inicjalizacjaZmiennych();
 	void inicjalizacjaOkna();
@@ -66,8 +82,7 @@ public:
 	Silnik();
 	~Silnik();
 
-	//inicjalizacja obiektуw
-
+	//inicjalizacja obiektow
 	void spawnPlayer();
 	void spawnEnemy();
 	void spawnBackground();
@@ -83,7 +98,6 @@ public:
 	void aktualizacjaEnemies();
 	void aktualizacjaStatystyk();
 	void aktualizacjaPlatform();
-	//aktualizacja wszystkiego
 	void aktualizacja();
 
 	// wyswietlanie gry
@@ -91,11 +105,7 @@ public:
 	void wyswietlEnemies();
 	void wyswietlPlatform();
 	void wyswietlBackground();
-	// wyswietlenie wszystkiego
 	void wyswietlenie();
-
-
-
 };
 
 class MaszynaStanow

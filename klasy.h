@@ -4,6 +4,7 @@
 #include <vector>
 #include <algorithm>
 #include <iostream>
+
 using namespace std;
 
 class Animation
@@ -145,25 +146,9 @@ public:
 
     void SetHP(float dHP)
     {
-        cout << "Player Do: " << hp << endl;
-        if (dHP < 0)
-        {
-            hp += dHP;
-        }
-        else
-        {
-            hp -= dHP;
-        }
-        cout << "Player Po: " << hp << endl;
-
-        //if (hp <= 0) {
-        //    hp = 0;
-        //    
-        //    if (currentState != EntityState::Dying) {
-        //        currentState = EntityState::Dying;
-        //        animationDead.reset();
-        //    }
-        //}
+        //w celu rozbudowania na np heal
+        if (dHP < 0) hp += dHP;
+        else hp -= dHP;
     }
 
     void SetInvulnerable(float duration) { invulnerabilityTimer = duration; }

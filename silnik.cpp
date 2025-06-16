@@ -140,6 +140,10 @@ void Silnik::spawnPlayer()
 
 
 	player = new Player(player_textures, player_sounds, sf::Vector2f(400.f, 325.f));
+	hitboxPlayer.setSize(sf::Vector2f(64.0f, 48.0f));
+	hitboxPlayer.setOrigin(32.0f, 10.0f);
+	hitboxPlayer.setFillColor(sf::Color(0, 0, 0, 0));
+	//hitboxPlayer.setFillColor(sf::Color::Red);
 	player->setPosition(orient_x, orient_y);
 	if (poz_y == -7 && poz_x == 6) {
 		player->setPosition(640, 200);
@@ -148,13 +152,36 @@ void Silnik::spawnPlayer()
 
 void Silnik::spawnEnemy()
 {
-	/*vector<unique_ptr<Enemy>> enemies;
-	enemies.emplace_back(make_unique<Boar>(boar_textures, boar_sounds, sf::Vector2f(950.f, 325.f)));*/
-	// enemies.emplace_back(make_unique<Bee>(bee_textures, bee_sounds, sf::Vector2f(600.f, 150.f)));
+	enemies.clear();
 
+	boarIdle.loadFromFile("boar-Idle.png");
+	boarWalk.loadFromFile("boar-Walk.png");
+	boarRun.loadFromFile("boar-Run.png");
+	boarHit.loadFromFile("boar-Hit.png");
 
-	/*Bee przeciwnik(sf::Vector2f(window->getSize().x * 0.9 , 0));
-	enemies.push_back(przeciwnik);*/
+	bufferBoar.loadFromFile("soundAttackBoar.mp3");
+	boar_sounds.emplace_back(&bufferBoar);
+
+	boar_textures.emplace_back(&boarIdle);
+	boar_textures.emplace_back(&boarWalk);
+	boar_textures.emplace_back(&boarRun);
+	boar_textures.emplace_back(&boarHit);
+
+	beeBuzzing.loadFromFile("soundBuzzingBee.mp3");
+	vector<sf::SoundBuffer*> bee_sounds;
+	bee_sounds.emplace_back(&beeBuzzing);
+	
+	beeFly.loadFromFile("bee-Fly.png");
+	beeAttack.loadFromFile("bee-Attack.png");
+	beeHit.loadFromFile("bee-Hit.png");
+
+	bee_textures.emplace_back(&beeFly);
+	bee_textures.emplace_back(&beeAttack);
+	bee_textures.emplace_back(&beeHit);
+
+	enemies.emplace_back(make_unique<Boar>(boar_textures, boar_sounds, sf::Vector2f(950.f, 325.f)));
+    enemies.emplace_back(make_unique<Bee>(bee_textures, bee_sounds, sf::Vector2f(600.f, 150.f)));
+
 }
 
 void Silnik::spawnBackground()
@@ -169,8 +196,8 @@ void Silnik::spawnBackground()
 	sf::IntRect woda = sf::IntRect(95, 300, 40, 34);
 	sf::IntRect platforma = sf::IntRect(0, 9, 77, 83);
 
-
 	if (poz_y == 1)
+	{
 		if (poz_y == -7 && poz_x == 6)
 		{
 			pl.setTextureRect(sf::IntRect(64, 160, 30, 30));
@@ -186,50 +213,20 @@ void Silnik::spawnBackground()
 			}
 
 		}
-	//if (poz_y == 1)
-	//{
-	//	pl.setTextureRect(sf::IntRect(100, 300, 40, 34));
-	//	pl.setPosition(0, y1 * 0.9);
-	//	pl.setScale(100, 3);
-	//	this->backgrounds.push_back(pl);
-	//}
-	//if (poz_x == 2 && poz_y == 1)
-	//{
-	//	for (size_t i = 0; i < 3; i++)
-	//	{
-	//		pl.setPosition(x1 / 9 * (1 + (i * 3)), y1 / 4 * 3);
-	//		pl.setScale(4, 4);
-	//		pl.setTextureRect(sf::IntRect(0, 9, 77, 83));
-	//		this->backgrounds.push_back(pl);
-	//	}
-	//	pl.setPosition(x1 / 9 * 8, 0);
-	//	pl.setTextureRect(sf::IntRect(160, 0, 30, 120));
-	//	pl.setScale(4, 4);
-	//	this->backgrounds.push_back(pl);
-	//	
-	//}
-	//else if (poz_x == 3 && poz_y == 1)
-	//{
-	//	for (size_t i = 0; i < 6; i++)
-	//	{
-	//		pl.setPosition(x1 / 9 * (1 + (i)), y1 / 4 * 3);
-	//		pl.setScale(2, 2);
-	//		pl.setTextureRect(sf::IntRect(0, 9, 77, 83));
-	//		this->backgrounds.push_back(pl);
-	//	}
-	//}
-
+	}
 }
 
 void Silnik::spawnPlatforms()
 {
 	platforms.clear();
-	sf::Texture staticTex;
+	sf::Texture staticTex, levTex;
 	staticTex.loadFromFile("static.png");
+	levTex.loadFromFile("levitating.png");
 	float x1 = this->window->getSize().x;
 	float y1 = this->window->getSize().y;
 	Platform pl(&staticTex, sf::Vector2f(200.f, 175.f), sf::Vector2f(0, 0), PlatformType::Static);
-
+	Platform lev(&levTex, sf::Vector2f(2000.f, 175.f), sf::Vector2f(1000, 800), PlatformType::Levitating);
+	platforms.emplace_back(lev);
 
 	if (poz_x == 0 && poz_y == 0)
 	{
@@ -242,8 +239,6 @@ void Silnik::spawnPlatforms()
 		pl.setPosition(1680, y1 - 300);
 		platforms.emplace_back(pl);
 	}
-
-
 	else if (poz_x == 1 && poz_y == 0)
 	{
 		// platforma dolna , platformy blokujące i platformy do poziomu wyżej
@@ -267,8 +262,6 @@ void Silnik::spawnPlatforms()
 		pl.setPosition(300, 100);
 		platforms.emplace_back(pl);
 	}
-
-
 	else if (poz_x == 2 && poz_y == 0)
 	{
 		//górna ,dolna, ściany boczne
@@ -290,7 +283,6 @@ void Silnik::spawnPlatforms()
 
 
 	}
-
 	else if (poz_x == 3 && poz_y == 0)
 	{
 		// platformy w fałdy + platformy od wejść
@@ -412,7 +404,6 @@ void Silnik::spawnPlatforms()
 	{
 
 	}
-
 	else if (poz_x == 3 && poz_y == -1)
 	{
 		pl.setScale(4, 2);
@@ -500,9 +491,7 @@ void Silnik::spawnPlatforms()
 		pl.setPosition(600, 880);
 		platforms.emplace_back(pl);
 	}
-
-
-	if (poz_y == -7 && poz_x == 6)
+	else if (poz_y == -7 && poz_x == 6)
 	{
 		for (int i = 1; i < 3; i++)
 		{
@@ -520,6 +509,14 @@ void Silnik::spawnPlatforms()
 			pl.setScale(2.5, 2);
 			platforms.emplace_back(pl);
 		}
+	}
+	else
+	{
+		poz_x = 0;
+		poz_y = 0;
+		orient_x = 240;
+		orient_y = 270;
+		inicjalizacjaZmiennych();
 	}
 
 
@@ -576,10 +573,10 @@ void Silnik::aktualizacjaEvents()
 
 void Silnik::aktualizacjaPlayer()
 {
-	
+	hitboxPlayer.setPosition(player->GetPosition());
 	player->update(dt);
-	player->ResetAttackFlag();
-	/*if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+	/*player->ResetAttackFlag();
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
 	{
 		player->move(0.f, -9.5f);
 
@@ -599,13 +596,18 @@ void Silnik::aktualizacjaPlayer()
 		player->move(9.5f, 0.f);
 
 	}*/
+	player->wasOnGround = false;
 	for (Platform& platform : platforms)
 	{
-		if (player->GetCollider().intersects(platform.GetCollider()))
+		if (hitboxPlayer.getGlobalBounds().intersects(platform.GetCollider()))
 		{
 			player->OnCollision(platform, dt);
+			player->wasOnGround = true;
+			
 		}
 	}
+	//player->isOnGround = player->wasOnGround;
+
 	if (player->getPosition().x > this->window->getSize().x)
 	{
 		poz_x += 1;
@@ -638,44 +640,41 @@ void Silnik::aktualizacjaPlayer()
 
 void Silnik::aktualizacjaEnemies()
 {
-
+	
 
 	// 2) enemies and platforms
-	//for (std::unique_ptr<Enemy>& enemyPtr : enemies)
-	//{
-	//    Enemy& enemy = *enemyPtr;
-	//    for (Platform& platform : platforms)
-	//    {
-	//        if (enemy.GetCollider().intersects(platform.GetCollider()))
-	//        {
-	//            enemy.OnCollision(platform, dt);
-	//            // Если платформа должна реагировать на врага, то раскомментируйте:
-	//            // platform.OnCollision(enemy, dt);
-	//        }
-	//    }
-	//}
+	for (std::unique_ptr<Enemy>& enemyPtr : enemies)
+	{
+	    Enemy& enemy = *enemyPtr;
+	    for (Platform& platform : platforms)
+	    {
+	        if (enemy.GetCollider().intersects(platform.GetCollider()))
+	        {
+	            enemy.OnCollision(platform, dt);
+	            //platform.OnCollision(enemy, dt);
+	        }
+	    }
+	}
 
 	// 3) hero and enemies
-	//for (std::unique_ptr<Enemy>& enemyPtr : enemies)
-	//{
-	//    Enemy& enemy = *enemyPtr;
-	//    if (hero.GetCollider().intersects(enemy.GetCollider()))
-	//    {
-	//        // Игрок атакует врага, или враг атакует игрока
-	//        hero.OnCollision(enemy, dt);
-	//        enemy.OnCollision(hero, dt);
-	//    }
-	//}
+	for (std::unique_ptr<Enemy>& enemyPtr : enemies)
+	{
+	    Enemy& enemy = *enemyPtr;
+	    if (player->GetCollider().intersects(enemy.GetCollider()))
+	    {
+	  
+	        player->OnCollision(enemy, dt);
+	        enemy.OnCollision(*player, dt);
+	    }
+	}
 
 	//hero.ResetAttackFlag();
 
-
-
-   /* enemies.erase(std::remove_if(enemies.begin(), enemies.end(),
+	enemies.erase(std::remove_if(enemies.begin(), enemies.end(),
 		[](const std::unique_ptr<Enemy>& enemy) {
 			return enemy->GetHP() <= 0.0f;
 		}),
-		enemies.end());*/
+		enemies.end());
 }
 
 void Silnik::aktualizacjaStatystyk()
@@ -692,20 +691,19 @@ void Silnik::aktualizacjaPlatform()
 void Silnik::aktualizacja()
 {
 	dt = clock.restart().asSeconds();
+
+	if (dt > 0.1f) dt = 0.1f;
 	this->aktualizacjaEvents();
 	this->aktualizacjaPlayer();
 	this->aktualizacjaEnemies();
 	this->aktualizacjaStatystyk();
 	this->aktualizacjaPlatform();
-	//std::cout << "mango" << std::endl;
 }
 // wyswietlanie
 
 
 void Silnik::wyswietlPlayer()
 {
-	//sf::Texture texture;
-	//texture.loadFromFile("idle_knight_1.png");
 	sf::Texture hero;
 	sf::SoundBuffer Play;
 
@@ -716,15 +714,15 @@ void Silnik::wyswietlPlayer()
 		break;
 	case EntityState::Running:
 		hero.loadFromFile("hero-Run.png");
-		
+
 		break;
 	case EntityState::Jumping:
 		hero.loadFromFile("hero-Jump.png");
-		
+
 		break;
 	case EntityState::Attacking:
 		hero.loadFromFile("hero-Attack.png");
-		
+
 		break;
 	case EntityState::Dying:
 		hero.loadFromFile("hero-Dead.png");
@@ -733,14 +731,20 @@ void Silnik::wyswietlPlayer()
 		hero.loadFromFile("hero-PushDown.png");
 		break;
 	}
-	//hero.loadFromFile("hero-Idle.png");
 	player->setTexture(hero);
 	player->setTextures(dt);
 	this->window->draw(*player);
+	this->window->draw(hitboxPlayer);
 }
 
 void Silnik::wyswietlEnemies()
 {
+	for (unique_ptr<Enemy>& enemy : enemies)
+	{
+		enemy->Update(dt, *player);
+		enemy->update(dt);
+		this->window->draw(*enemy);
+	}
 }
 
 void Silnik::wyswietlPlatform()

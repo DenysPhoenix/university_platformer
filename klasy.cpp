@@ -137,7 +137,7 @@ Player::Player(vector<sf::Texture*> textures, vector<sf::SoundBuffer*> sounds, s
     animationDead(deadTexture, sf::Vector2u(8, 1), 0.1f),
 
     animationPushDown(pushTexture, sf::Vector2u(1, 1), 0.1f),
-    canDoubleJump(false),
+    canDoubleJump(true),
     canClimbWalls(true),
     touchWalls(false),
     canPushDown(true),
@@ -264,7 +264,6 @@ void Player::setTextures(float dt)
         animationAttack.setFinished(false);
         animationAttack.update(0, dt, faceRight);
         setTextureRect(animationAttack.uvRect);
-        /*velocity.x = 0.0f;*/
         velocity.y += 981.0f * dt;
         move(velocity * dt);
         if (animationAttack.isFinished())
@@ -291,25 +290,20 @@ void Player::setTextures(float dt)
 
 void Player::update(float dt)
 {
+    int jumpCount = 0;
     if (invulnerabilityTimer > 0)
-    {
         invulnerabilityTimer -= dt;
-    }
 
     if (attackCooldown > 0)
-    {
         attackCooldown -= dt;
-    }
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::J) && attackCooldown <= 0) // 
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::J)/* && attackCooldown <= 0*/) // 
     {
         soundAttack.play();
         currentState = EntityState::Attacking;
         hasAttackedThisFrame = true;
-        
         attackCooldown = ATTACK_COOLDOWN_MAX;
-        animationAttack.reset();
-
+        //animationAttack.reset();
     }
 
     if (hp <= 0.001)
@@ -355,58 +349,57 @@ void Player::update(float dt)
             {
                 soundRun.stop();
             }
-
-
         }
     }
 
-        // skok
-        if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Space) ||
-            sf::Keyboard::isKeyPressed(sf::Keyboard::W) ||
-            sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-            && canJump && (isOnGround || wasOnGround))
-        {
-            velocity.y = -sqrtf(3.f * g * h);
-            soundJump.play();
-            if (wasOnGround)
-            {
-                wasOnGround = false;
-            }
-            else
-            {
-                isOnGround = false;
-                wasOnGround = true;
-            }
-        }
-
-        velocity.y += g * dt;
-        //velocity.y = 0; // do testów poziomów
-        move(velocity * dt);
-
-        if (!isOnGround)
-        {
-            currentState = EntityState::Jumping;
-            //if (velocity.y < 0.0f) currentState = EntityState::Jumping; //830.0f
-            //else currentState = EntityState::Idle;
-        }
-        else
-        {
-            if (std::abs(velocity.x) > 0.0f) currentState = EntityState::Running;
-            else currentState = EntityState::Idle;
-        }
-    
-    /*else if (currentState == EntityState::Attacking)
+    // skok
+    if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Space) ||
+        sf::Keyboard::isKeyPressed(sf::Keyboard::W) ||
+        sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+        && canJump && (isOnGround || wasOnGround))
     {
-        velocity.x = 0.0f;
-    }*/
-    /*
-    else if (currentState == EntityState::Dying)
+
+
+         velocity.y = -sqrtf(3.f * g * h);
+         soundJump.play();
+         isOnGround = false;
+
+         if (canDoubleJump && wasOnGround && !isOnGround)
+         {
+             canJump = true;
+         }
+         else
+         {
+             canJump = false;
+         }
+
+         /* if (wasOnGround)
+         {
+             wasOnGround = false;
+         }
+         else
+         {
+             isOnGround = false;
+             wasOnGround = true;
+         }*/
+    }
+    velocity.y += g * dt;
+    //velocity.y = 0; // do testów poziomów
+
+    //wasOnGround = !isOnGround && velocity.y > 0;
+    move(velocity * dt);
+
+    if (!isOnGround)
     {
-        velocity.x = 0.0f;
-        velocity.y = 0.0f;
-    }*/
-
-
+        currentState = EntityState::Jumping;
+        //if (velocity.y < 0.0f) currentState = EntityState::Jumping; //830.0f
+        //else currentState = EntityState::Idle;
+    }
+    else
+    {
+        if (std::abs(velocity.x) > 0.0f) currentState = EntityState::Running;
+        else currentState = EntityState::Idle;
+    }
 }
 
 //int jumpCount = 2;
@@ -1157,3 +1150,4 @@ void Bee::Update(float dt, Player& player)
         break;
     }
 }
+
