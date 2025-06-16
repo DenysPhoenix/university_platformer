@@ -77,6 +77,8 @@ int main()
 	y -= textBounds.top;
 	title.setPosition(x, y);
 
+
+	Silnik* gra = nullptr;
 	while (window.isOpen())
 	{
 		sf::Event event;
@@ -95,11 +97,13 @@ int main()
 					if (PlayButton.isClicked(mousePosition, window))
 					{
 						window.close();
-						Silnik gra;
-						while (gra.czyokno())
-						{
-							gra.aktualizacja();
-							gra.wyswietlenie();
+						if (gra == nullptr) { 
+							gra = new Silnik();
+							while (gra->czyokno())
+							{
+								gra->aktualizacja();
+								gra->wyswietlenie();
+							}
 						}
 					}
 					if (ExitButton.isClicked(mousePosition, window))
@@ -128,6 +132,7 @@ int main()
 
 	}
 
+	delete gra;
     return 0;
 }
 

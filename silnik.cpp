@@ -71,6 +71,8 @@ Silnik::Silnik() {
 
 Silnik::~Silnik() {
 	delete this->window;
+	delete this->player;
+
 }
 
 // funkcje prywatne
@@ -119,25 +121,25 @@ void Silnik::spawnPlayer()
 
 	//dzwieki
 	//sf::SoundBuffer PlayerRun, PlayerJump, PlayerAttack, PlayerDie;
-	//PlayerRun.loadFromFile("dzwieki/soundRunHero.mp3");
-	//PlayerJump.loadFromFile("dzwieki/soundJump.mp3");
-	//PlayerAttack.loadFromFile("dzwieki/soundAttackHero.mp3");
-	//PlayerDie.loadFromFile("dzwieki/soundDieHero.mp3");
+	PlayerRun.loadFromFile("dzwieki/soundRunHero.mp3");
+	PlayerJump.loadFromFile("dzwieki/soundJump.mp3");
+	PlayerAttack.loadFromFile("dzwieki/soundAttackHero.mp3");
+	PlayerDie.loadFromFile("dzwieki/soundDieHero.mp3");
 
 	////vector<sf::SoundBuffer*> player_sounds;
-	//player_sounds.emplace_back(&PlayerRun);
-	//player_sounds.emplace_back(&PlayerJump);
-	//player_sounds.emplace_back(&PlayerAttack);
-	//player_sounds.emplace_back(&PlayerDie);
+	player_sounds.emplace_back(&PlayerRun);
+	player_sounds.emplace_back(&PlayerJump);
+	player_sounds.emplace_back(&PlayerAttack);
+	player_sounds.emplace_back(&PlayerDie);
 
-	std::vector<sf::SoundBuffer*> permanent_player_sounds; // Используем const sf::SoundBuffer*
-	permanent_player_sounds.emplace_back(&PlayerRun);
-	permanent_player_sounds.emplace_back(&PlayerJump);
-	permanent_player_sounds.emplace_back(&PlayerAttack);
-	permanent_player_sounds.emplace_back(&PlayerDie);
+	//std::vector<sf::SoundBuffer> permanent_player_sounds; // Используем const sf::SoundBuffer*
+	//permanent_player_sounds.emplace_back(PlayerRun);
+	//permanent_player_sounds.emplace_back(PlayerJump);
+	//permanent_player_sounds.emplace_back(PlayerAttack);
+	//permanent_player_sounds.emplace_back(PlayerDie);
 
 
-	player = new Player(player_textures, permanent_player_sounds, sf::Vector2f(400.f, 325.f));
+	player = new Player(player_textures, player_sounds, sf::Vector2f(400.f, 325.f));
 	player->setPosition(orient_x, orient_y);
 	if (poz_y == -7 && poz_x == 6) {
 		player->setPosition(640, 200);
@@ -574,9 +576,7 @@ void Silnik::aktualizacjaEvents()
 
 void Silnik::aktualizacjaPlayer()
 {
-	/*PlayerRun.loadFromFile("dzwieki/soundRunHero.mp3");
-	PlayerJump.loadFromFile("dzwieki/soundJump.mp3");
-	PlayerAttack.loadFromFile("dzwieki/soundAttackHero.mp3");*/
+	
 	player->update(dt);
 	player->ResetAttackFlag();
 	/*if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
