@@ -52,6 +52,7 @@ enum class EntityState
     //dla Boar
     Walking,
     Hitted,
+    Fleeing,
     //dla Bee
     Flying
 };
@@ -245,15 +246,17 @@ public:
 
     bool IsInvulnerable() const { return invulnerabilityTimer > 0; };
     void SetInvulnerable(float duration) { invulnerabilityTimer = duration; };
-    const float INVULNERABILITY_DURATION = 0.5f;
+    const float INVULNERABILITY_DURATION = 1.0f;
 
 protected:
     //wlasnosci fizyczne
     sf::Vector2f velocity;
     float damage, hp, g;
+    float maxHP = hp;
 
     //wlasnosci oddzialywania na inne Entity
     bool isOnGround;
+    const float TOUCH_RANGE = 0.0f;
 
     float invulnerabilityTimer;
 };
@@ -270,8 +273,9 @@ public:
 
 private:
     //wlasnosci fizyczne
-    const float CHASE_RANGE = 300.0f;
-    const float ATTACK_RANGE = 50.0f;
+    const float CHASE_RANGE = 250.0f;
+    const float ATTACK_RANGE = 150.0f;
+    const float TOUCH_RANGE = 15.0f;
     const float RUN_SPEED = 150.0f;
     const float WALK_SPEED = 100.0f;
 
@@ -288,6 +292,8 @@ private:
     Animation animationHit;
 
     sf::Sound soundAttacking;
+
+
 };
 
 class Bee :public Enemy

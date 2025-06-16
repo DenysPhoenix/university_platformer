@@ -114,7 +114,7 @@ Player::Player(vector<sf::Texture*> textures, vector<sf::SoundBuffer*> sounds, s
     velocity(sf::Vector2f(0.0f, 0.0f)),
     h(200.0f),
     g(981.0f),
-    hp(10000.0f),
+    hp(1000.0f),
     damage(-20.0f),
 
     canJump(true),
@@ -280,17 +280,16 @@ void Player::setTextures(float dt)
             currentState = EntityState::Idle;
         }
         break;
-    case EntityState::PushingDown:
+   /* case EntityState::PushingDown:
         setTexture(*pushTexture);
         animationPushDown.update(0, dt, faceRight);
         setTextureRect(animationPushDown.uvRect);
-        break;
+        break;*/
     }
 }
 
 void Player::update(float dt)
 {
-    int jumpCount = 0;
     if (invulnerabilityTimer > 0)
         invulnerabilityTimer -= dt;
 
@@ -321,21 +320,23 @@ void Player::update(float dt)
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) ||
             sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
         {
+            currentState = EntityState::Running;
             currentlyPressingMoveKey = true;
             velocity.x = -speed;
             faceRight = false;
         }
 
         // poruszanie sie w prawo
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) ||
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) ||
             sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
         {
+            currentState = EntityState::Running;
             currentlyPressingMoveKey = true;
             velocity.x = speed;
             faceRight = true;
         }
 
-        if (currentlyPressingMoveKey && velocity.x != 0 && isOnGround)
+        else if (currentlyPressingMoveKey && velocity.x != 0 && isOnGround)
         {
             if (soundRun.getStatus() != sf::Sound::Playing)
             {
@@ -349,7 +350,12 @@ void Player::update(float dt)
             {
                 soundRun.stop();
             }
+            currentState = EntityState::Idle;
         }
+    }
+    else if (currentState == EntityState::Attacking)
+    {
+        velocity.x = 0.0;
     }
 
     // skok
@@ -358,20 +364,20 @@ void Player::update(float dt)
         sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
         && canJump && (isOnGround || wasOnGround))
     {
+        currentState = EntityState::Jumping;
 
-
-         velocity.y = -sqrtf(3.f * g * h);
+         velocity.y = -sqrtf(2.f * g * h);
          soundJump.play();
          isOnGround = false;
 
-         if (canDoubleJump && wasOnGround && !isOnGround)
-         {
-             canJump = true;
-         }
-         else
-         {
-             canJump = false;
-         }
+         ///*if (canDoubleJump && wasOnGround && !isOnGround)
+         //{
+         //    canJump = true;
+         //}
+         //else
+         //{
+         //    canJump = false;
+         //}*/
 
          /* if (wasOnGround)
          {
@@ -388,18 +394,6 @@ void Player::update(float dt)
 
     //wasOnGround = !isOnGround && velocity.y > 0;
     move(velocity * dt);
-
-    if (!isOnGround)
-    {
-        currentState = EntityState::Jumping;
-        //if (velocity.y < 0.0f) currentState = EntityState::Jumping; //830.0f
-        //else currentState = EntityState::Idle;
-    }
-    else
-    {
-        if (std::abs(velocity.x) > 0.0f) currentState = EntityState::Running;
-        else currentState = EntityState::Idle;
-    }
 }
 
 //int jumpCount = 2;
@@ -581,7 +575,6 @@ Enemy::Enemy(vector<sf::Texture*> textures, sf::Vector2f position) :
     Entity(position),
 
     damage(-40.0f),
-    //hp(160.0f),
     g(981.0f),
     velocity(sf::Vector2f(0.0f, 0.0f)),
     isOnGround(false),
@@ -636,25 +629,17 @@ void Enemy::OnCollision(Entity& other, float dt)
         }
     }
 
-    /* Player* player = dynamic_cast<Player*>(&other);
-     if (player)
-     {
-         if (player->GetCurrentState() == EntityState::Attacking && player->HasAttackedThisFrame())
-         {
-             SetHP(player->GetDamage());
-             if (hp > 0 && currentState != EntityState::Hitted)
-                 currentState = EntityState::Hitted;
-         }
-
-         if (currentState == EntityState::Attacking && !player->IsInvulnerable() && player->GetCurrentState() != EntityState::Dying)
-         {
-             player->SetHP(GetDamage());
-             player->SetInvulnerable(player->INVULNERABILITY_DURATION);
-         }
-     }*/
     Player* player = dynamic_cast<Player*>(&other);
     if (player)
     {
+        // sf::Vector2f playerPos = player->GetPosition();
+        // sf::Vector2f enemyPos = GetPosition();
+
+        // float currentDistanceX = abs(playerPos.x - enemyPos.x);
+        // float currentDistanceY = std::abs(playerPos.y - enemyPos.y);
+        //// if (sqrt(pow(currentDistanceX, 2) + pow(currentDistanceY,2)) <= TOUCH_RANGE)
+        // if (currentDistanceX ==0 ) /*<= TOUCH_RANGE && currentDistanceY <= TOUCH_RANGE)*/
+        // {
         if (player->GetState() == EntityState::Attacking && player->HasAttackedThisFrame() && !IsInvulnerable())
         {
             SetHP(player->GetDamage());
@@ -689,7 +674,7 @@ Boar::Boar(vector<sf::Texture*> textures, vector<sf::SoundBuffer*> sounds, sf::V
     animationRun(runTexture, sf::Vector2u(6, 1), 0.1f),
     animationHit(hitTexture, sf::Vector2u(4, 1), 0.1f)
 {
-    hp = 160;
+    hp = 60;
 
     currentState = EntityState::Idle;
     this->setTexture(*idleTexture);
@@ -807,84 +792,115 @@ Boar::~Boar()
 //}
 
 void Boar::Update(float dt, Player& player) {
-    if (invulnerabilityTimer > 0) {
-        invulnerabilityTimer -= dt;
-    }
+    if (invulnerabilityTimer > 0) invulnerabilityTimer -= dt;
+
+   
+    velocity.y += g * dt;
 
     sf::Vector2f playerPos = player.GetPosition();
     sf::Vector2f enemyPos = GetPosition();
 
-    velocity.y += g * dt;
-
     bool shouldBeAttacking = false;
-    float currentDistanceX = std::abs(playerPos.x - enemyPos.x);
+    float currentDistanceX = abs(playerPos.x - enemyPos.x);
+    float currentDistanceY = std::abs(playerPos.y - enemyPos.y);
 
-    velocity.x = 0.0f;
+    
+    //maszyna stanów 
 
-    if (playerPos.x < enemyPos.x) {
-        faceRight = true;
-    }
-    else if (playerPos.x > enemyPos.x) {
-        faceRight = false;
-    }
-
-    if (currentDistanceX < ATTACK_RANGE && std::abs(playerPos.y - enemyPos.y) < GetCollider().height / 2.0f + player.GetCollider().height / 2.0f) {
-        shouldBeAttacking = true;
-        velocity.x = 0.0f;
-    }
-    else if (currentDistanceX < CHASE_RANGE) {
-        currentState = EntityState::Running;
-        if (playerPos.x < enemyPos.x) {
-            velocity.x = -RUN_SPEED;
+    if (hp > 0.3 * maxHP)
+    {
+        if (currentDistanceX >= CHASE_RANGE
+            && std::abs(playerPos.y - enemyPos.y) < GetCollider().height / 2.0f + player.GetCollider().height / 2.0f)
+        {
+            currentState = EntityState::Idle;
+            velocity.x = 0.0f;
         }
-        else {
+        if (currentDistanceX >= ATTACK_RANGE && currentDistanceX < CHASE_RANGE 
+            && std::abs(playerPos.y - enemyPos.y) < GetCollider().height / 2.0f + player.GetCollider().height / 2.0f)
+        {
+            currentState = EntityState::Walking;
+        }
+        else if (currentDistanceX < ATTACK_RANGE && currentDistanceX > TOUCH_RANGE 
+            && std::abs(playerPos.y - enemyPos.y) < GetCollider().height / 2.0f + player.GetCollider().height / 2.0f)
+        {
+            currentState = EntityState::Running;
+            //shouldBeAttacking = true;
+            //velocity.x = 0.0f;
+        }
+        //else if(currentDistanceX == 0/* TOUCH_RANGE && currentDistanceY <= TOUCH_RANGE*/)
+        //{
+        //    //currentState = EntityState::Idle;
+        //    velocity.x = 0.0f;
+        //}
+    }
+    else
+    {
+        currentState = EntityState::Fleeing;
+    }
+
+    if (playerPos.x < enemyPos.x) 
+    {
+        faceRight = true;
+        if (currentState == EntityState::Walking) velocity.x = -WALK_SPEED;
+        else if (currentState == EntityState::Running) velocity.x = -RUN_SPEED;
+        else if (currentState == EntityState::Fleeing)
+        {
+            faceRight = false;
             velocity.x = RUN_SPEED;
         }
     }
-    else {
-        currentState = EntityState::Idle;
-        velocity.x = 0;
+    else if (playerPos.x > enemyPos.x)
+    {
+        faceRight = false;
+        if (currentState == EntityState::Walking) velocity.x = WALK_SPEED;
+        else if (currentState == EntityState::Running) velocity.x = RUN_SPEED;
+        else if (currentState == EntityState::Fleeing)
+        {
+            faceRight = true;
+            velocity.x = -RUN_SPEED;
+        }
     }
 
-    EntityState previousState = currentState;
+ /*   EntityState previousState = currentState;
 
-    if (shouldBeAttacking && previousState != EntityState::Attacking) {
-        currentState = EntityState::Attacking;
+    if (shouldBeAttacking && previousState != EntityState::Running) 
+    {
+        currentState = EntityState::Running;
         animationRun.reset();
     }
-    else if (!shouldBeAttacking && currentState == EntityState::Attacking && animationRun.isFinished()) {
+    else if (!shouldBeAttacking && currentState == EntityState::Running && animationRun.isFinished()) 
+    {
         currentState = EntityState::Idle;
     }
-    else if (!shouldBeAttacking && currentDistanceX >= CHASE_RANGE && currentState != EntityState::Attacking) {
+    else if (!shouldBeAttacking && currentDistanceX >= CHASE_RANGE && currentState != EntityState::Running) 
+    {
         currentState = EntityState::Idle;
-    }
+    }*/
 
-    if (currentState == EntityState::Attacking) {
-        if (soundAttacking.getStatus() != sf::Sound::Playing) {
-            soundAttacking.play();
-        }
-    }
-    else {
-        if (soundAttacking.getStatus() == sf::Sound::Playing) {
-            soundAttacking.stop();
-        }
-    }
+    if (currentState == EntityState::Running) 
+        if (soundAttacking.getStatus() != sf::Sound::Playing) soundAttacking.play();
+    else if (soundAttacking.getStatus() == sf::Sound::Playing) soundAttacking.stop();
 
     move(velocity * dt);
 
     switch (currentState) {
-    case EntityState::Running:
-        setTexture(*runTexture);
-        animationRun.update(0, dt, faceRight);
-        setTextureRect(animationRun.uvRect);
-        break;
     case EntityState::Idle:
         setTexture(*idleTexture);
         animationIdle.update(0, dt, faceRight);
         setTextureRect(animationIdle.uvRect);
         velocity.x = 0;
         break;
-    case EntityState::Attacking:
+    case EntityState::Running:
+        setTexture(*runTexture);
+        animationRun.update(0, dt, faceRight);
+        setTextureRect(animationRun.uvRect);
+        break;
+    case EntityState::Walking:
+        setTexture(*walkTexture);
+        animationWalk.update(0, dt, faceRight);
+        setTextureRect(animationWalk.uvRect);
+        break;
+    case EntityState::Fleeing:
         setTexture(*runTexture);
         animationRun.update(0, dt, faceRight);
         setTextureRect(animationRun.uvRect);
@@ -907,7 +923,7 @@ Bee::Bee(vector<sf::Texture*> textures, vector<sf::SoundBuffer*> sounds, sf::Vec
     animationHit(hitTexture, sf::Vector2u(4, 1), 0.1f)
 {
 
-    hp = 100;
+    hp = 40;
     currentState = EntityState::Flying;
     this->setTexture(*flyTexture);
     setTextureRect(animationFly.uvRect);

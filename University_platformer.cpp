@@ -70,10 +70,18 @@ int main()
 
 
 	Silnik* gra = nullptr;
+	sf::Music music;
+	if (!music.openFromFile("music.mp3"))
+		return -1;
+	music.setVolume(0.f);
+	music.play();
+	music.setLoop(true);
 	while (window.isOpen())
 	{
-		sf::Event event;
+	
 
+
+		sf::Event event;
 		while (window.pollEvent(event))
 		{
 			if (event.type == sf::Event::Closed)
@@ -84,12 +92,15 @@ int main()
 			{
 				if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
 				{
+					music.stop();
 					sf::Vector2i mousePosition(event.mouseButton.x, event.mouseButton.y);
 					if (PlayButton.isClicked(mousePosition, window))
 					{
 						window.close();
+						currentGameState = PLAYING;
 						if (gra == nullptr) { 
 							gra = new Silnik();
+							music.play();
 							while (gra->czyokno())
 							{
 								gra->aktualizacja();
@@ -99,6 +110,7 @@ int main()
 					}
 					if (ExitButton.isClicked(mousePosition, window))
 					{
+						
 						window.close();
 					}
 				}
