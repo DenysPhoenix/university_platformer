@@ -7,15 +7,6 @@
 
 int main()
 {
-	//sf::SoundBuffer buffer;
-	//if (!buffer.loadFromFile("dzwieki/soundJump.mp3"))
-	//	return -1;
-
-	//sf::Sound sound;
-	//sound.setBuffer(buffer);
-	//sound.play();
-	
-    
 	sf::RenderWindow window(sf::VideoMode(1920, 1080), "Menu");
 	window.setFramerateLimit(60);
 
