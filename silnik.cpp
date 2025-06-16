@@ -1,5 +1,4 @@
-﻿
-#include "silnik.h"
+﻿#include "silnik.h"
 #include "klasy.h"
 #include "SFML/Graphics.hpp"
 #include <iostream>
@@ -7,6 +6,8 @@
 #include <string>
 #include <sstream>
 #include <algorithm>
+#include <cstdlib> 
+#include <ctime>   
 
 
 Button::Button(const sf::Vector2f& position, const sf::Vector2f& size, const string& label)
@@ -48,7 +49,6 @@ bool Button::isClicked(const sf::Vector2i& mousePosition, sf::RenderWindow& wind
 	sf::Vector2f worldPos = window.mapPixelToCoords(mousePosition);
 	return shape.getGlobalBounds().contains(worldPos.x, worldPos.y);
 }
-
 
 // konstruktor i destruktor
 
@@ -93,6 +93,7 @@ void Silnik::inicjalizacjaOkna()
 	this->window = new sf::RenderWindow(this->videomode, "Moon walker", sf::Style::Default);
 
 	this->window->setFramerateLimit(60);
+	std::srand(static_cast<unsigned>(std::time(nullptr)));
 
 }
 
@@ -137,9 +138,13 @@ void Silnik::spawnPlayer()
 	hitboxPlayer.setFillColor(sf::Color(0, 0, 0, 0));
 
 	player->setPosition(orient_x, orient_y);
-	if (poz_y == -7 && poz_x == 6) {
-		player->setPosition(640, 200);
-	}
+
+
+	shape1.setFillColor(sf::Color::Black);
+	shape1.setSize(sf::Vector2f(50, 50));
+	shape1.setPosition(window->getSize().x - 300 + (50 * poz_x), -poz_y * 50 + 50);
+	mapa.setScale(0.5, 0.5);
+	mapa.setPosition(window->getSize().x - 300, 0);
 }
 
 void Silnik::spawnEnemy()
@@ -170,40 +175,130 @@ void Silnik::spawnEnemy()
 	bee_textures.emplace_back(&beeFly);
 	bee_textures.emplace_back(&beeAttack);
 	bee_textures.emplace_back(&beeHit);
-
-	enemies.emplace_back(make_unique<Boar>(boar_textures, boar_sounds, sf::Vector2f(950.f, 325.f)));
-    enemies.emplace_back(make_unique<Bee>(bee_textures, bee_sounds, sf::Vector2f(600.f, 150.f)));
+	for (size_t i = 0; i < 5; i++)
+	{
+		int los = std::rand() % 10;
+		int los1 = std::rand() % 10;
+		int los2 = std::rand() % 2;
+		if (los2)
+		{
+			enemies.emplace_back(make_unique<Boar>(boar_textures, boar_sounds, sf::Vector2f(200+100 * los, 400 + (50 * los1))));
+		}
+		else
+		{
+			enemies.emplace_back(make_unique<Bee>(bee_textures, bee_sounds, sf::Vector2f(180 * los, 400 + (50 * los1))));
+		}
+		
+	}
+	
 
 }
 
 void Silnik::spawnBackground()
 {
+
 	backgrounds.clear();
 	sf::Sprite pl;
 	float x1 = this->window->getSize().x;
 	float y1 = this->window->getSize().y;
-
 	sf::IntRect drzewo = sf::IntRect(160, 0, 30, 120);
 	sf::IntRect most = sf::IntRect(80, 114, 82, 45);
 	sf::IntRect woda = sf::IntRect(95, 300, 40, 34);
 	sf::IntRect platforma = sf::IntRect(0, 9, 77, 83);
 
-	if (poz_y == 1)
+	if (poz_y == 0)
 	{
-		if (poz_y == -7 && poz_x == 6)
+		//background krzaki
+		for (int i = 0; i < 15; i++)
 		{
-			pl.setTextureRect(sf::IntRect(64, 160, 30, 30));
-			pl.setScale(4, 4.5);
-			for (int i = 0; i < 14; i++)
+			for (int j = 0; j < 13; j++)
 			{
-				for (int j = 0; j < 8; j++)
-				{
-					pl.setPosition(120 + i * 120, 100 + j * 120);
-					backgrounds.push_back(pl);
-				}
+				pl.setScale(4, 4);
+				pl.setPosition(i * 128, j * 52);
+				pl.setTextureRect(sf::IntRect(22, 191, 41, 32));
+				backgrounds.push_back(pl);
+			}
+		}
+		//background drzewa
+		for (int i = 0; i < 10; i++)
+		{
+			pl.setScale(8, 8);
+			if (i % 2 == 0)
+			{
+				pl.setTextureRect(drzewo);
+				pl.setPosition(i * 180, 500);
 
 			}
+			else
+			{
+				pl.setTextureRect(drzewo);
+				pl.setPosition((i * 180) + 30, 450);
+			}
+			backgrounds.emplace_back(pl);
 
+		}
+		// liście drzew
+		for (int i = 0; i < 10; i++)
+		{
+			for (int j = 0; j < 2; j++)
+			{
+				int los = std::rand() % 4;
+				pl.setScale(5, 5);
+				pl.setPosition(-50 + i * 180 + ((los - 2) * 10), j * 180);
+				pl.setTextureRect(sf::IntRect(274, 5 + (los * 47), 123, 42));
+				backgrounds.emplace_back(pl);
+				pl.setScale(5, -5);
+				pl.setPosition(-50 + i * 180 + ((los - 2) * 10), 400 + j * 180);
+				backgrounds.emplace_back(pl);
+			}
+		}
+	}
+	
+
+
+	if (poz_y <= -1)
+	{
+		for (int i = 0; i < 15; i++)
+		{
+			pl.setTextureRect(sf::IntRect(0, 300, 47,35 ));
+			pl.setScale(4, 4);
+			pl.setPosition(-40 + i * 155, 0);
+			backgrounds.push_back(pl);
+			pl.setTextureRect(sf::IntRect(95, 300, 35, 20));
+			pl.setPosition(-40 + i * 155, 180);
+			pl.setScale(4, -4);
+			backgrounds.push_back(pl);
+			pl.setScale(3, 4);
+			pl.setPosition(-50+i * 128, 180);
+			pl.setTextureRect(sf::IntRect(0, 91, 77,36 ));
+			backgrounds.push_back(pl);
+			for (int j = 0; j < 13; j++)
+			{
+				pl.setScale(4, 4);
+				pl.setPosition(i * 128,300+ j * 60);
+				pl.setTextureRect(sf::IntRect(164, 192, 41, 31));
+				backgrounds.push_back(pl);
+			}
+		}
+		for (int i = 0; i < 10; i++)
+		{
+			int los = std::rand() % 10;
+			int los1 = std::rand() % 10;
+			pl.setPosition(180*los,400+(50*los1));
+			pl.setTextureRect(sf::IntRect(0, 225, 48, 45));
+			pl.setScale(4, 4);
+			backgrounds.push_back(pl);
+		}
+	}
+	if (poz_y > 0)
+	{
+		for (int i = 0; i < 10; i++)
+		{
+			int los = std::rand() % 4;
+			pl.setScale(5, 5);
+			pl.setPosition(-50 + i * 180 + ((los - 2) * 10),1000);
+			pl.setTextureRect(sf::IntRect(274, 5 + (los * 47), 123, 42));
+			backgrounds.emplace_back(pl);
 		}
 	}
 }
@@ -249,8 +344,21 @@ void Silnik::spawnPlatforms()
 		platforms.emplace_back(pl);
 
 		pl.setScale(2, 5);
-		pl.setPosition(300, 100);
+		pl.setPosition(300, 150);
 		platforms.emplace_back(pl);
+	}
+	else if (poz_x == 1 && poz_y == 1)
+	{
+		pl.setScale(2, 4);
+		pl.setPosition(300, y1-100);
+		platforms.emplace_back(pl);
+		for (int i = 0; i < 10; i++)
+		{
+			int los = std::rand() % 10;
+			int los1 = std::rand() % 10;
+			pl.setPosition(180 * los, 400 + (50 * los1));
+			platforms.push_back(pl);
+		}
 	}
 	else if (poz_x == 2 && poz_y == 0)
 	{
@@ -390,75 +498,71 @@ void Silnik::spawnPlatforms()
 		pl.setPosition(1600, 660);
 		platforms.emplace_back(pl);
 	}
-	else if (poz_x == 6 && poz_y == 0)
-	{
-
-	}
 	else if (poz_x == 3 && poz_y == -1)
 	{
 		pl.setScale(4, 2);
-		pl.setPosition(300, 100);
+		pl.setPosition(350, 150);
 		platforms.emplace_back(pl);
 
 		// SKOK W BOK (w prawo, < 300px)
 		pl.setScale(2, 2);
-		pl.setPosition(550, 180);  // 250px w bok, 80px w górę
+		pl.setPosition(600, 230);  // 250px w bok, 80px w górę
 		platforms.emplace_back(pl);
 
 		// ŚCIANA pionowa jako przeszkoda
 		pl.setScale(1, 8);
-		pl.setPosition(800, 100);
+		pl.setPosition(850, 150);
 		platforms.emplace_back(pl);
 
 		// SKOK PO DRUGIEJ STRONIE ŚCIANY
 		pl.setScale(3, 2);
-		pl.setPosition(900, 250); // za ścianą
+		pl.setPosition(950, 300); // za ścianą
 		platforms.emplace_back(pl);
 
 		// SKOK W DÓŁ — spadający segment
 		pl.setScale(2, 2);
-		pl.setPosition(1000, 450);
+		pl.setPosition(1050, 500);
 		platforms.emplace_back(pl);
 
 		// ŚCIANA pionowa wąska po lewej
 		pl.setScale(1, 6);
-		pl.setPosition(750, 400);
+		pl.setPosition(800, 450);
 		platforms.emplace_back(pl);
 
 		// PÓŁKA po lewej — z powrotem
 		pl.setScale(2, 2);
-		pl.setPosition(600, 600);
+		pl.setPosition(650, 650);
 		platforms.emplace_back(pl);
 
 		// KOŃCOWA szeroka platforma
 		pl.setScale(5, 2);
-		pl.setPosition(300, 800);
+		pl.setPosition(350, 850);
 		platforms.emplace_back(pl);
 	}
 	else if (poz_x == 3 && poz_y == -2)
 	{
 		pl.setScale(4, 2);
-		pl.setPosition(400, 0);
+		pl.setPosition(450, 50);
 		platforms.emplace_back(pl);
 
 		// Skok w prawo — lekko w górę
 		pl.setScale(2, 2);
-		pl.setPosition(700, 100);
+		pl.setPosition(750, 150);
 		platforms.emplace_back(pl);
 
 		// Ściana — pionowa przeszkoda w środku
 		pl.setScale(1, 8);
-		pl.setPosition(900, 50);
+		pl.setPosition(950, 100);
 		platforms.emplace_back(pl);
 
 		// Skok na drugą stronę ściany
 		pl.setScale(2, 2);
-		pl.setPosition(1050, 200);
+		pl.setPosition(1100, 250);
 		platforms.emplace_back(pl);
 
 		// Spadek niżej — szeroka półka
 		pl.setScale(3, 2);
-		pl.setPosition(900, 400);
+		pl.setPosition(950, 450);
 		platforms.emplace_back(pl);
 
 		// Ściana po lewej
@@ -480,25 +584,6 @@ void Silnik::spawnPlatforms()
 		pl.setScale(5, 2);
 		pl.setPosition(600, 880);
 		platforms.emplace_back(pl);
-	}
-	else if (poz_y == -7 && poz_x == 6)
-	{
-		for (int i = 1; i < 3; i++)
-		{
-			for (int j = 0; j < 2; j++)
-			{
-				Platform pl(&staticTex, sf::Vector2f(100.f, 75.f), sf::Vector2f(640 * i, 300 + (600 * j)), PlatformType::Static);
-				pl.setScale(2.5, 2);
-				platforms.emplace_back(pl);
-			}
-
-		}
-		for (int i = 0; i < 4; i++)
-		{
-			Platform pl(&staticTex, sf::Vector2f(100.f, 75.f), sf::Vector2f(480 * i, 600), PlatformType::Static);
-			pl.setScale(2.5, 2);
-			platforms.emplace_back(pl);
-		}
 	}
 	else
 	{
@@ -626,7 +711,7 @@ void Silnik::aktualizacjaPlayer()
 		orient_x = window->getSize().x - 150;
 		this->inicjalizacjaZmiennych();
 	}
-	if (player->getPosition().y < -100)
+	if (player->getPosition().y < 0)
 	{
 		poz_y += 1;
 		orient_x = player->GetPosition().x;
@@ -732,6 +817,11 @@ void Silnik::wyswietlPlayer()
 	player->setTextures(dt);
 	this->window->draw(*player);
 	this->window->draw(hitboxPlayer);
+	hero.loadFromFile("mapa.png");
+	mapa.setTexture(hero);
+	window->draw(mapa);
+	window->draw(shape1);
+	
 }
 
 void Silnik::wyswietlEnemies()
@@ -767,6 +857,8 @@ void Silnik::wyswietlBackground()
 
 	sf::Texture texture;
 	texture.loadFromFile("Tiles.png");
+
+	
 	for (auto pl : backgrounds)
 	{
 		pl.setTexture(texture);
@@ -826,3 +918,5 @@ Poziom::Poziom(sf::Sprite p1, std::vector<sf::Sprite> v2, std::vector<sf::Sprite
 Poziom::~Poziom()
 {
 }
+
+

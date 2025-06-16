@@ -264,7 +264,7 @@ void Player::setTextures(float dt)
         animationAttack.setFinished(false);
         animationAttack.update(0, dt, faceRight);
         setTextureRect(animationAttack.uvRect);
-        velocity.y += 981.0f * dt;
+        //velocity.y += 981.0f * dt;
         move(velocity * dt);
         if (animationAttack.isFinished())
         {
@@ -348,10 +348,10 @@ void Player::update(float dt)
             currentState = EntityState::Idle;
         }
     }
-    else if (currentState == EntityState::Attacking)
+    /*else if (currentState == EntityState::Attacking)
     {
         velocity.x = 0.0;
-    }
+    }*/
 
     // skok
     if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Space) ||

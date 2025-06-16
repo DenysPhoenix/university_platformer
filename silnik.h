@@ -43,6 +43,10 @@ private:
 	vector<sf::SoundBuffer*> player_sounds;
 	sf::RectangleShape hitboxPlayer;
 
+	// obsługa mapy
+	sf::Sprite mapa;
+	sf::RectangleShape shape1;
+
 	//obsluga Enemy
 
 	//obsluga dzika
