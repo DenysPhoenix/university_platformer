@@ -24,10 +24,10 @@ int main()
 	GameState currentGameState = MENU;
 
 	sf::Texture heroIdle, staticTex, boarIdle, beeIdle;
-	heroIdle.loadFromFile("grafiki/hero-Idle.png");
+	heroIdle.loadFromFile("hero-Idle.png");
 	staticTex.loadFromFile("Tiles.png");
-	boarIdle.loadFromFile("grafiki/boar-Idle.png");
-	beeIdle.loadFromFile("grafiki/bee-Fly.png");
+	boarIdle.loadFromFile("boar-Idle.png");
+	beeIdle.loadFromFile("bee-Fly.png");
 
 	sf::Sprite bohater, boar, bee, krzak;
 	bohater.setTexture(heroIdle);
@@ -63,7 +63,7 @@ int main()
 	sf::Font font;
 	sf::Text title;
 	title.setString("MOON WALKER");
-	font.loadFromFile("grafiki/Super-Mario-Font.ttf");
+	font.loadFromFile("Super-Mario-Font.ttf");
 	title.setFont(font);
 	title.setFillColor(sf::Color(39, 127, 163));
 	title.setCharacterSize(70);

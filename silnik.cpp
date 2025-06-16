@@ -16,7 +16,7 @@ Button::Button(const sf::Vector2f& position, const sf::Vector2f& size, const str
 	shape.setFillColor(sf::Color(255, 186, 0, 0));//(sf::Color(255, 255, 255));
 	//shape.setOutlineColor(sf::Color::Blue);
 	//shape.setOutlineThickness(2.f);
-	font.loadFromFile("grafiki/Super-Mario-Font.ttf");
+	font.loadFromFile("Super-Mario-Font.ttf");
 
 
 	text.setFont(font);
@@ -55,16 +55,16 @@ bool Button::isClicked(const sf::Vector2i& mousePosition, sf::RenderWindow& wind
 Silnik::Silnik() {
 	this->inicjalizacjaOkna();
 	this->inicjalizacjaZmiennych();
-	if (!PlayerRun.loadFromFile("dzwieki/soundRunHero.mp3")) {
+	if (!PlayerRun.loadFromFile("soundRunHero.mp3")) {
 		std::cerr << "ERROR: Failed to load soundRunHero.mp3" << std::endl;
 	}
-	if (!PlayerJump.loadFromFile("dzwieki/soundJump.mp3")) {
+	if (!PlayerJump.loadFromFile("soundJump.mp3")) {
 		std::cerr << "ERROR: Failed to load soundJump.mp3" << std::endl;
 	}
-	if (!PlayerAttack.loadFromFile("dzwieki/soundAttackHero.mp3")) {
+	if (!PlayerAttack.loadFromFile("soundAttackHero.mp3")) {
 		std::cerr << "ERROR: Failed to load soundAttackHero.mp3" << std::endl;
 	}
-	if (!PlayerDie.loadFromFile("dzwieki/soundDieHero.mp3")) {
+	if (!PlayerDie.loadFromFile("soundDieHero.mp3")) {
 		std::cerr << "ERROR: Failed to load soundDieHero.mp3" << std::endl;
 	}
 }
@@ -104,12 +104,12 @@ void Silnik::spawnPlayer()
 {
 	//tektury
 	//sf::Texture heroIdle, heroRun, heroJump, heroAttack, heroDead, heroPushDown;
-	heroIdle.loadFromFile("grafiki/hero-Idle.png");
-	heroRun.loadFromFile("grafiki/hero-Run.png");
-	heroJump.loadFromFile("grafiki/hero-Jump.png");
-	heroAttack.loadFromFile("grafiki/hero-Attack.png");
-	heroDead.loadFromFile("grafiki/hero-Dead.png");
-	heroPushDown.loadFromFile("grafiki/hero-PushDown.png");
+	heroIdle.loadFromFile("hero-Idle.png");
+	heroRun.loadFromFile("hero-Run.png");
+	heroJump.loadFromFile("hero-Jump.png");
+	heroAttack.loadFromFile("hero-Attack.png");
+	heroDead.loadFromFile("hero-Dead.png");
+	heroPushDown.loadFromFile("hero-PushDown.png");
 
 	//vector<sf::Texture*> player_textures;
 	player_textures.emplace_back(&heroIdle);
@@ -121,10 +121,10 @@ void Silnik::spawnPlayer()
 
 	//dzwieki
 	//sf::SoundBuffer PlayerRun, PlayerJump, PlayerAttack, PlayerDie;
-	PlayerRun.loadFromFile("dzwieki/soundRunHero.mp3");
-	PlayerJump.loadFromFile("dzwieki/soundJump.mp3");
-	PlayerAttack.loadFromFile("dzwieki/soundAttackHero.mp3");
-	PlayerDie.loadFromFile("dzwieki/soundDieHero.mp3");
+	PlayerRun.loadFromFile("soundRunHero.mp3");
+	PlayerJump.loadFromFile("soundJump.mp3");
+	PlayerAttack.loadFromFile("soundAttackHero.mp3");
+	PlayerDie.loadFromFile("soundDieHero.mp3");
 
 	////vector<sf::SoundBuffer*> player_sounds;
 	player_sounds.emplace_back(&PlayerRun);
@@ -225,7 +225,7 @@ void Silnik::spawnPlatforms()
 {
 	platforms.clear();
 	sf::Texture staticTex;
-	staticTex.loadFromFile("grafiki/static.png");
+	staticTex.loadFromFile("static.png");
 	float x1 = this->window->getSize().x;
 	float y1 = this->window->getSize().y;
 	Platform pl(&staticTex, sf::Vector2f(200.f, 175.f), sf::Vector2f(0, 0), PlatformType::Static);
@@ -712,28 +712,28 @@ void Silnik::wyswietlPlayer()
 	switch (player->GetCurrentState())
 	{
 	case EntityState::Idle:
-		hero.loadFromFile("grafiki/hero-Idle.png");
+		hero.loadFromFile("hero-Idle.png");
 		break;
 	case EntityState::Running:
-		hero.loadFromFile("grafiki/hero-Run.png");
+		hero.loadFromFile("hero-Run.png");
 		
 		break;
 	case EntityState::Jumping:
-		hero.loadFromFile("grafiki/hero-Jump.png");
+		hero.loadFromFile("hero-Jump.png");
 		
 		break;
 	case EntityState::Attacking:
-		hero.loadFromFile("grafiki/hero-Attack.png");
+		hero.loadFromFile("hero-Attack.png");
 		
 		break;
 	case EntityState::Dying:
-		hero.loadFromFile("grafiki/hero-Dead.png");
+		hero.loadFromFile("hero-Dead.png");
 		break;
 	case EntityState::PushingDown:
-		hero.loadFromFile("grafiki/hero-PushDown.png");
+		hero.loadFromFile("hero-PushDown.png");
 		break;
 	}
-	//hero.loadFromFile("grafiki/hero-Idle.png");
+	//hero.loadFromFile("hero-Idle.png");
 	player->setTexture(hero);
 	player->setTextures(dt);
 	this->window->draw(*player);
