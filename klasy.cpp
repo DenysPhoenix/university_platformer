@@ -6,6 +6,7 @@
 #include <string>
 #include <sstream>
 
+
 Animation::Animation(sf::Texture* texture, sf::Vector2u imageCount, float switchTime) :
     totalTime(0.0f),
     imageCount(imageCount),
@@ -302,8 +303,10 @@ void Player::update(float dt)
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::J) && attackCooldown <= 0) // 
     {
+        soundAttack.play();
         currentState = EntityState::Attacking;
         hasAttackedThisFrame = true;
+        
         attackCooldown = ATTACK_COOLDOWN_MAX;
         animationAttack.reset();
 
@@ -319,10 +322,12 @@ void Player::update(float dt)
     {
         velocity.x = 0.0f;
 
+        bool currentlyPressingMoveKey = false;
         // poruszanie sie w lewo
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) ||
             sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
         {
+            currentlyPressingMoveKey = true;
             velocity.x = -speed;
             faceRight = false;
         }
@@ -331,9 +336,29 @@ void Player::update(float dt)
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) ||
             sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
         {
+            currentlyPressingMoveKey = true;
             velocity.x = speed;
             faceRight = true;
         }
+
+        if (currentlyPressingMoveKey && velocity.x != 0 && isOnGround)
+        {
+            if (soundRun.getStatus() != sf::Sound::Playing)
+            {
+                soundRun.play();
+                soundRun.setPlayingOffset(sf::seconds(2.f));
+            }
+        }
+        else
+        {
+            if (soundRun.getStatus() == sf::Sound::Playing)
+            {
+                soundRun.stop();
+            }
+
+
+        }
+    }
 
         // skok
         if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Space) ||
@@ -341,8 +366,8 @@ void Player::update(float dt)
             sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
             && canJump && (isOnGround || wasOnGround))
         {
-            velocity.y = -sqrtf(2.f * g * h);
-
+            velocity.y = -sqrtf(3.f * g * h);
+            soundJump.play();
             if (wasOnGround)
             {
                 wasOnGround = false;
@@ -353,6 +378,7 @@ void Player::update(float dt)
                 wasOnGround = true;
             }
         }
+
         velocity.y += g * dt;
         //velocity.y = 0; // do testów poziomów
         move(velocity * dt);
@@ -368,11 +394,12 @@ void Player::update(float dt)
             if (std::abs(velocity.x) > 0.0f) currentState = EntityState::Running;
             else currentState = EntityState::Idle;
         }
-    }
+    
     /*else if (currentState == EntityState::Attacking)
     {
         velocity.x = 0.0f;
-    }
+    }*/
+    /*
     else if (currentState == EntityState::Dying)
     {
         velocity.x = 0.0f;
@@ -644,8 +671,6 @@ void Enemy::OnCollision(Entity& other, float dt)
         }
 
 
-        // Óðîí îò âðàãà ê èãðîêó
-        // Èãðîê ïîëó÷àåò óðîí, òîëüêî åñëè âðàã àòàêóåò è èãðîê íå íåóÿçâèì
         if (GetState() == EntityState::Attacking && !player->IsInvulnerable() && player->GetState() != EntityState::Dying)
         {
             player->SetHP(GetDamage());
@@ -875,7 +900,7 @@ void Boar::Update(float dt, Player& player) {
 }
 
 
-Bee::Bee(vector<sf::Texture*> textures, vector<sf::SoundBuffer*> sounds, sf::Vector2f pos):
+Bee::Bee(vector<sf::Texture*> textures, vector<sf::SoundBuffer*> sounds, sf::Vector2f pos) :
     Enemy(textures, pos),
 
     flyTexture(textures[0]),

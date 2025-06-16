@@ -9,15 +9,70 @@
 #include <algorithm>
 
 
+Button::Button(const sf::Vector2f& position, const sf::Vector2f& size, const string& label)
+{
+	shape.setPosition(position);
+	shape.setSize(size);
+	shape.setFillColor(sf::Color(255, 186, 0, 0));//(sf::Color(255, 255, 255));
+	//shape.setOutlineColor(sf::Color::Blue);
+	//shape.setOutlineThickness(2.f);
+	font.loadFromFile("Super-Mario-Font.ttf");
+
+
+	text.setFont(font);
+	text.setString(label);
+	text.setCharacterSize(36);
+	text.setFillColor(sf::Color::White);
+	sf::FloatRect shapeBounds = shape.getGlobalBounds();
+	sf::FloatRect textBounds = text.getLocalBounds();
+
+	float x = shapeBounds.left + (shapeBounds.width - textBounds.width) / 2.f;
+	float y = shapeBounds.top + (shapeBounds.height - textBounds.height) / 2.f;
+
+	// textBounds.left/top > 0
+	x -= textBounds.left;
+	y -= textBounds.top;
+
+	text.setPosition(x, y);
+}
+
+void Button::draw(sf::RenderWindow& window)
+{
+	window.draw(shape);
+
+	window.draw(text);
+}
+
+bool Button::isClicked(const sf::Vector2i& mousePosition, sf::RenderWindow& window)
+{
+	sf::Vector2f worldPos = window.mapPixelToCoords(mousePosition);
+	return shape.getGlobalBounds().contains(worldPos.x, worldPos.y);
+}
+
+
 // konstruktor i destruktor
 
 Silnik::Silnik() {
 	this->inicjalizacjaOkna();
 	this->inicjalizacjaZmiennych();
+	if (!PlayerRun.loadFromFile("soundRunHero.mp3")) {
+		std::cerr << "ERROR: Failed to load soundRunHero.mp3" << std::endl;
+	}
+	if (!PlayerJump.loadFromFile("soundJump.mp3")) {
+		std::cerr << "ERROR: Failed to load soundJump.mp3" << std::endl;
+	}
+	if (!PlayerAttack.loadFromFile("soundAttackHero.mp3")) {
+		std::cerr << "ERROR: Failed to load soundAttackHero.mp3" << std::endl;
+	}
+	if (!PlayerDie.loadFromFile("soundDieHero.mp3")) {
+		std::cerr << "ERROR: Failed to load soundDieHero.mp3" << std::endl;
+	}
 }
 
 Silnik::~Silnik() {
 	delete this->window;
+	delete this->player;
+
 }
 
 // funkcje prywatne
@@ -27,7 +82,7 @@ void Silnik::inicjalizacjaZmiennych()
 	spawnPlayer();
 	spawnPlatforms();
 	spawnBackground();
- 	spawnEnemy();
+	spawnEnemy();
 	statistics();
 }
 
@@ -48,38 +103,44 @@ void Silnik::inicjalizacjaOkna()
 void Silnik::spawnPlayer()
 {
 	//tektury
-	sf::Texture heroIdle, heroRun, heroJump, heroAttack, heroDead, heroPushDown;
-    heroIdle.loadFromFile("grafiki/hero-Idle.png");
-    heroRun.loadFromFile("grafiki/hero-Run.png");
-    heroJump.loadFromFile("grafiki/hero-Jump.png");
-    heroAttack.loadFromFile("grafiki/hero-Attack.png");
-    heroDead.loadFromFile("grafiki/hero-Dead.png");
-	heroPushDown.loadFromFile("grafiki/hero-PushDown.png");
+	//sf::Texture heroIdle, heroRun, heroJump, heroAttack, heroDead, heroPushDown;
+	heroIdle.loadFromFile("hero-Idle.png");
+	heroRun.loadFromFile("hero-Run.png");
+	heroJump.loadFromFile("hero-Jump.png");
+	heroAttack.loadFromFile("hero-Attack.png");
+	heroDead.loadFromFile("hero-Dead.png");
+	heroPushDown.loadFromFile("hero-PushDown.png");
 
-    vector<sf::Texture*> player_textures;
-    player_textures.emplace_back(&heroIdle);
-    player_textures.emplace_back(&heroRun);
-    player_textures.emplace_back(&heroJump);
-    player_textures.emplace_back(&heroAttack);
-    player_textures.emplace_back(&heroDead);
+	//vector<sf::Texture*> player_textures;
+	player_textures.emplace_back(&heroIdle);
+	player_textures.emplace_back(&heroRun);
+	player_textures.emplace_back(&heroJump);
+	player_textures.emplace_back(&heroAttack);
+	player_textures.emplace_back(&heroDead);
 	player_textures.emplace_back(&heroPushDown);
 
 	//dzwieki
-	sf::SoundBuffer PlayerRun, PlayerJump, PlayerAttack, PlayerDie;
-	PlayerRun.loadFromFile("dzwieki/soundRunHero.mp3");
-	PlayerJump.loadFromFile("dzwieki/soundJump.mp3");
-	PlayerAttack.loadFromFile("dzwieki/soundAttackHero.mp3");
-	PlayerDie.loadFromFile("dzwieki/soundDieHero.mp3");
+	//sf::SoundBuffer PlayerRun, PlayerJump, PlayerAttack, PlayerDie;
+	PlayerRun.loadFromFile("soundRunHero.mp3");
+	PlayerJump.loadFromFile("soundJump.mp3");
+	PlayerAttack.loadFromFile("soundAttackHero.mp3");
+	PlayerDie.loadFromFile("soundDieHero.mp3");
 
-	vector<sf::SoundBuffer*> player_sounds;
+	////vector<sf::SoundBuffer*> player_sounds;
 	player_sounds.emplace_back(&PlayerRun);
 	player_sounds.emplace_back(&PlayerJump);
 	player_sounds.emplace_back(&PlayerAttack);
 	player_sounds.emplace_back(&PlayerDie);
 
+	//std::vector<sf::SoundBuffer> permanent_player_sounds; // Используем const sf::SoundBuffer*
+	//permanent_player_sounds.emplace_back(PlayerRun);
+	//permanent_player_sounds.emplace_back(PlayerJump);
+	//permanent_player_sounds.emplace_back(PlayerAttack);
+	//permanent_player_sounds.emplace_back(PlayerDie);
 
-	player = new Player(player_textures,player_sounds, sf::Vector2f(400.f, 325.f));
-	player->setPosition(orient_x,orient_y);
+
+	player = new Player(player_textures, player_sounds, sf::Vector2f(400.f, 325.f));
+	player->setPosition(orient_x, orient_y);
 	if (poz_y == -7 && poz_x == 6) {
 		player->setPosition(640, 200);
 	}
@@ -110,21 +171,21 @@ void Silnik::spawnBackground()
 
 
 	if (poz_y == 1)
-	if (poz_y == -7 && poz_x == 6)
-	{
-		pl.setTextureRect(sf::IntRect(64, 160, 30, 30));
-		pl.setScale(4, 4.5);
-		for (int i = 0; i < 14; i++)
+		if (poz_y == -7 && poz_x == 6)
 		{
-			for (int j = 0; j < 8; j++)
+			pl.setTextureRect(sf::IntRect(64, 160, 30, 30));
+			pl.setScale(4, 4.5);
+			for (int i = 0; i < 14; i++)
 			{
-				pl.setPosition(120+i*120, 100 + j*120);
-				backgrounds.push_back(pl);
+				for (int j = 0; j < 8; j++)
+				{
+					pl.setPosition(120 + i * 120, 100 + j * 120);
+					backgrounds.push_back(pl);
+				}
+
 			}
-		
+
 		}
-	
-	}
 	//if (poz_y == 1)
 	//{
 	//	pl.setTextureRect(sf::IntRect(100, 300, 40, 34));
@@ -157,17 +218,17 @@ void Silnik::spawnBackground()
 	//		this->backgrounds.push_back(pl);
 	//	}
 	//}
-	
+
 }
 
 void Silnik::spawnPlatforms()
 {
 	platforms.clear();
 	sf::Texture staticTex;
-	staticTex.loadFromFile("grafiki/static.png");
+	staticTex.loadFromFile("static.png");
 	float x1 = this->window->getSize().x;
 	float y1 = this->window->getSize().y;
-	Platform pl(&staticTex, sf::Vector2f(200.f, 175.f), sf::Vector2f(0,0), PlatformType::Static);
+	Platform pl(&staticTex, sf::Vector2f(200.f, 175.f), sf::Vector2f(0, 0), PlatformType::Static);
 
 
 	if (poz_x == 0 && poz_y == 0)
@@ -199,7 +260,7 @@ void Silnik::spawnPlatforms()
 		platforms.emplace_back(pl);
 
 		pl.setScale(2, 5);
-		pl.setPosition(0,500);
+		pl.setPosition(0, 500);
 		platforms.emplace_back(pl);
 
 		pl.setScale(2, 5);
@@ -215,11 +276,11 @@ void Silnik::spawnPlatforms()
 		pl.setScale(24, 2);
 		platforms.emplace_back(pl);
 
-		pl.setPosition(0,100);
+		pl.setPosition(0, 100);
 		pl.setScale(24, 2);
 		platforms.emplace_back(pl);
 
-		pl.setPosition(x1 -250, 200);
+		pl.setPosition(x1 - 250, 200);
 		pl.setScale(2, 8);
 		platforms.emplace_back(pl);
 
@@ -349,7 +410,7 @@ void Silnik::spawnPlatforms()
 	}
 	else if (poz_x == 6 && poz_y == 0)
 	{
-		
+
 	}
 
 	else if (poz_x == 3 && poz_y == -1)
@@ -443,15 +504,15 @@ void Silnik::spawnPlatforms()
 
 	if (poz_y == -7 && poz_x == 6)
 	{
-		for (int i = 1; i < 3;i++)
+		for (int i = 1; i < 3; i++)
 		{
 			for (int j = 0; j < 2; j++)
 			{
-				Platform pl(&staticTex, sf::Vector2f(100.f, 75.f), sf::Vector2f(640 * i, 300+(600*j)), PlatformType::Static);
+				Platform pl(&staticTex, sf::Vector2f(100.f, 75.f), sf::Vector2f(640 * i, 300 + (600 * j)), PlatformType::Static);
 				pl.setScale(2.5, 2);
 				platforms.emplace_back(pl);
 			}
-			
+
 		}
 		for (int i = 0; i < 4; i++)
 		{
@@ -460,10 +521,10 @@ void Silnik::spawnPlatforms()
 			platforms.emplace_back(pl);
 		}
 	}
-	
-	
-    //platforms.emplace_back(Platform(&staticTex, sf::Vector2f(100.f, 75.f), sf::Vector2f(200.f, 400.f), PlatformType::Static));
-   
+
+
+	//platforms.emplace_back(Platform(&staticTex, sf::Vector2f(100.f, 75.f), sf::Vector2f(200.f, 400.f), PlatformType::Static));
+
 }
 
 void Silnik::statistics()
@@ -515,6 +576,7 @@ void Silnik::aktualizacjaEvents()
 
 void Silnik::aktualizacjaPlayer()
 {
+	
 	player->update(dt);
 	player->ResetAttackFlag();
 	/*if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
@@ -562,7 +624,7 @@ void Silnik::aktualizacjaPlayer()
 	{
 		poz_x -= 1;
 		orient_y = player->GetPosition().y;
-		orient_x = window->getSize().x -150;
+		orient_x = window->getSize().x - 150;
 		this->inicjalizacjaZmiennych();
 	}
 	if (player->getPosition().y < -100)
@@ -576,54 +638,54 @@ void Silnik::aktualizacjaPlayer()
 
 void Silnik::aktualizacjaEnemies()
 {
-	
-
-        // 2) enemies and platforms
-        //for (std::unique_ptr<Enemy>& enemyPtr : enemies)
-        //{
-        //    Enemy& enemy = *enemyPtr;
-        //    for (Platform& platform : platforms)
-        //    {
-        //        if (enemy.GetCollider().intersects(platform.GetCollider()))
-        //        {
-        //            enemy.OnCollision(platform, dt);
-        //            // Если платформа должна реагировать на врага, то раскомментируйте:
-        //            // platform.OnCollision(enemy, dt);
-        //        }
-        //    }
-        //}
-
-        // 3) hero and enemies
-        //for (std::unique_ptr<Enemy>& enemyPtr : enemies)
-        //{
-        //    Enemy& enemy = *enemyPtr;
-        //    if (hero.GetCollider().intersects(enemy.GetCollider()))
-        //    {
-        //        // Игрок атакует врага, или враг атакует игрока
-        //        hero.OnCollision(enemy, dt);
-        //        enemy.OnCollision(hero, dt);
-        //    }
-        //}
-
-        //hero.ResetAttackFlag();
 
 
+	// 2) enemies and platforms
+	//for (std::unique_ptr<Enemy>& enemyPtr : enemies)
+	//{
+	//    Enemy& enemy = *enemyPtr;
+	//    for (Platform& platform : platforms)
+	//    {
+	//        if (enemy.GetCollider().intersects(platform.GetCollider()))
+	//        {
+	//            enemy.OnCollision(platform, dt);
+	//            // Если платформа должна реагировать на врага, то раскомментируйте:
+	//            // platform.OnCollision(enemy, dt);
+	//        }
+	//    }
+	//}
 
-       /* enemies.erase(std::remove_if(enemies.begin(), enemies.end(),
-            [](const std::unique_ptr<Enemy>& enemy) {
-                return enemy->GetHP() <= 0.0f;
-            }),
-            enemies.end());*/
+	// 3) hero and enemies
+	//for (std::unique_ptr<Enemy>& enemyPtr : enemies)
+	//{
+	//    Enemy& enemy = *enemyPtr;
+	//    if (hero.GetCollider().intersects(enemy.GetCollider()))
+	//    {
+	//        // Игрок атакует врага, или враг атакует игрока
+	//        hero.OnCollision(enemy, dt);
+	//        enemy.OnCollision(hero, dt);
+	//    }
+	//}
+
+	//hero.ResetAttackFlag();
+
+
+
+   /* enemies.erase(std::remove_if(enemies.begin(), enemies.end(),
+		[](const std::unique_ptr<Enemy>& enemy) {
+			return enemy->GetHP() <= 0.0f;
+		}),
+		enemies.end());*/
 }
 
 void Silnik::aktualizacjaStatystyk()
 {
-	
+
 }
 
 void Silnik::aktualizacjaPlatform()
 {
-	
+
 
 }
 
@@ -646,29 +708,32 @@ void Silnik::wyswietlPlayer()
 	//texture.loadFromFile("idle_knight_1.png");
 	sf::Texture hero;
 	sf::SoundBuffer Play;
-	
+
 	switch (player->GetCurrentState())
 	{
 	case EntityState::Idle:
-		hero.loadFromFile("grafiki/hero-Idle.png");
+		hero.loadFromFile("hero-Idle.png");
 		break;
 	case EntityState::Running:
-		hero.loadFromFile("grafiki/hero-Run.png");
+		hero.loadFromFile("hero-Run.png");
+		
 		break;
 	case EntityState::Jumping:
-		hero.loadFromFile("grafiki/hero-Jump.png");
+		hero.loadFromFile("hero-Jump.png");
+		
 		break;
 	case EntityState::Attacking:
-		hero.loadFromFile("grafiki/hero-Attack.png");
+		hero.loadFromFile("hero-Attack.png");
+		
 		break;
 	case EntityState::Dying:
-		hero.loadFromFile("grafiki/hero-Dead.png");
+		hero.loadFromFile("hero-Dead.png");
 		break;
 	case EntityState::PushingDown:
-		hero.loadFromFile("grafiki/hero-PushDown.png");
+		hero.loadFromFile("hero-PushDown.png");
 		break;
 	}
-	//hero.loadFromFile("grafiki/hero-Idle.png");
+	//hero.loadFromFile("hero-Idle.png");
 	player->setTexture(hero);
 	player->setTextures(dt);
 	this->window->draw(*player);
@@ -692,7 +757,7 @@ void Silnik::wyswietlPlatform()
 
 void Silnik::wyswietlBackground()
 {
-	
+
 	sf::Font font;
 	font.loadFromFile("arial.ttf");
 	text.setFont(font);
@@ -731,14 +796,14 @@ void Silnik::wyswietlenie()
 
 MaszynaStanow::MaszynaStanow()
 {
-	 
+
 }
 
 MaszynaStanow::~MaszynaStanow()
 {
 }
 
-bool MaszynaStanow::czy(int a,int b)
+bool MaszynaStanow::czy(int a, int b)
 {
 	if (a == 2 && b == 1)
 	{
@@ -760,5 +825,3 @@ Poziom::Poziom(sf::Sprite p1, std::vector<sf::Sprite> v2, std::vector<sf::Sprite
 Poziom::~Poziom()
 {
 }
-
-

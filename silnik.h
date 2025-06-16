@@ -2,18 +2,43 @@
 #include "SFML/Graphics.hpp"
 #include "klasy.h"
 
+class Button
+{
+private:
+
+	sf::RectangleShape shape;
+	sf::Text text;
+	sf::Font font;
+
+public:
+
+	Button(const sf::Vector2f& position, const sf::Vector2f& size, const string& label);
+	void draw(sf::RenderWindow& window);
+	bool isClicked(const sf::Vector2i& mousePosition, sf::RenderWindow& window);
+};
+
+enum GameState {
+	MENU,
+	PLAYING
+};
+
 class Silnik
 {
 private:
-	
+
 	//tu umiescic trzeba wszystkie zmienne aby gra mogla dzialac
-	
+
 	sf::RenderWindow* window;
 	sf::VideoMode videomode;
 	sf::Event event;
 	sf::View view1;
 	sf::Color* tlo;
 	sf::Clock clock;
+
+	sf::Texture heroIdle, heroRun, heroJump, heroAttack, heroDead, heroPushDown;
+	vector<sf::Texture*> player_textures;
+	sf::SoundBuffer PlayerRun, PlayerJump, PlayerAttack, PlayerDie;
+	vector<sf::SoundBuffer*> player_sounds;
 
 	// tu takie zasady dzialania gry 
 	bool playerAlive;
@@ -73,14 +98,12 @@ public:
 
 };
 
-
-
 class MaszynaStanow
 {
 public:
 	MaszynaStanow();
 	~MaszynaStanow();
-	bool czy(int a ,int b);
+	bool czy(int a, int b);
 
 private:
 
@@ -92,15 +115,13 @@ public:
 	Poziom(sf::Sprite p1, std::vector<sf::Sprite> v2, std::vector<sf::Sprite> v3);
 	~Poziom();
 
-	
+
 
 private:
 	sf::Sprite player;
 	std::vector<sf::Sprite> enemy;
 	std::vector<sf::Sprite> platform;
 };
-
-
 
 
 
