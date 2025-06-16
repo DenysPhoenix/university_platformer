@@ -64,7 +64,7 @@ private:
 	float enemySpawnTimerMAX;
 	float dt;
 	int poz_x = 1;
-	int poz_y = 0;
+	int poz_y = 1;
 	int orient_x = 240;
 	int orient_y = 270;
 
