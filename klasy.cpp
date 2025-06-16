@@ -6,37 +6,6 @@
 #include <string>
 #include <sstream>
 
-//Animation::Animation(sf::Texture* texture, int imageCount, float switchTime)
-//{
-//    texture1;
-//    szer = static_cast<int>((texture->getSize().x) / static_cast<float>(imageCount));
-//    wys = static_cast<int>(texture->getSize().y);
-//}
-//
-//Animation::~Animation()
-//{
-//}
-//
-//void Animation::update(float deltaTime, bool faceRight)
-//{
-//    if (!isPaused) {
-//        //realizacja animacji
-//        totalTime += deltaTime;
-//
-//        if (totalTime >= switchTime)
-//        {
-//            totalTime -= switchTime;
-//            currentImage++;
-//
-//            if (currentImage >= imageCount)
-//            {
-//                currentImage = 0;
-//                finished = true;
-//            }
-//        }
-//    }
-//}
-
 
 Animation::Animation(sf::Texture* texture, sf::Vector2u imageCount, float switchTime) :
     totalTime(0.0f),
@@ -47,18 +16,6 @@ Animation::Animation(sf::Texture* texture, sf::Vector2u imageCount, float switch
 {
     uvRect.width = static_cast<int>(texture->getSize().x / static_cast<float>(imageCount.x));
     uvRect.height = static_cast<int>(texture->getSize().y / static_cast<float>(imageCount.y));
-
-    //kierunek animacji (lewo-prawo)
-    //if (currentImage.x == 0)
-    //{
-    //    uvRect.left = 0.3125 * uvRect.width;
-    //    uvRect.width *= 0.4375; /*uvRect.left + abs(uvRect.width)*0.5625;*/
-    //}
-    /* else
-     {
-         uvRect.left = currentImage.x * uvRect.width + 0.25 * uvRect.width;
-         uvRect.width = uvRect.left + abs(uvRect.width) * 0.5;
-     }*/
 }
 
 Animation::~Animation()
@@ -84,27 +41,6 @@ void Animation::update(int row, float deltaTime, bool faceRight)
     }
 
     uvRect.top = currentImage.y * uvRect.height;
-
-    //kierunek animacji (lewo-prawo)
-    //if (faceRight)
-    //{
-    //    if (currentImage.x == 0)
-    //    {
-    //        std::cout << uvRect.width;
-    //        uvRect.left = /*currentImage.x * uvRect.width/0.5625 +*/ 0.3125 * uvRect.width / 0.4375;
-    //        uvRect.width = abs(uvRect.width);
-    //    }
-    //    else
-    //    {
-    //        uvRect.left = currentImage.x * uvRect.width / 0.4375 + 0.5625 * uvRect.width / 0.4375;
-    //        uvRect.width = abs(uvRect.width);
-    //    }
-    //}
-    //else
-    //{
-    //    uvRect.left = (currentImage.x + 1) * abs(uvRect.width);
-    //    uvRect.width = -abs(uvRect.width);
-    //}
     if (faceRight)
     {
         uvRect.left = currentImage.x * uvRect.width;
@@ -163,18 +99,8 @@ Platform::Platform(sf::Texture* texture, sf::Vector2f size, sf::Vector2f positio
     setScale(1.4f, 1.4f);
 
     //skalowanie tekstury do zadanego rozmiaru
-    /*const sf::Texture* currentTexture = getTexture();
-    if (currentTexture && currentTexture->getSize().x > 0 && currentTexture->getSize().y > 0)
-    {
-        setScale(size.x / currentTexture->getSize().x, size.y / currentTexture->getSize().y);
-    }
-    else
-    {
-        std::cerr << "Warning: Texture for platform type " << static_cast<int>(type) << " is invalid or has zero size, cannot scale." << std::endl;
-        setScale(1.f, 1.f);
-    }*/
+    const sf::Texture* currentTexture = getTexture();
     velocity.x = 0.0f;
-    setOrigin(size / 2.f);
 }
 
 Platform::~Platform()
@@ -225,7 +151,7 @@ Player::Player(vector<sf::Texture*> textures, vector<sf::SoundBuffer*> sounds, s
     setTextureRect(animationIdle.uvRect);
     setOrigin((animationIdle.uvRect.width) / 2.f, animationIdle.uvRect.height / 2.f);
     //setScale(1.5f, 1.5f);
-    setScale(2.0f, 2.0f);
+    setScale(1.5f, 1.5f);
     speed = 300.f;
 }
 
@@ -291,7 +217,6 @@ void Player::OnCollision(Entity& other, float dt)
                     }
 
                     platform->SetVelocity(platformPushVelocity);
-                    // Óñòàíàâëèâàåì ôëàã, ÷òî ìû òîëêàåì moveable ïëàòôîðìó
                     isPushingMoveablePlatform = true;
 
                 }
@@ -364,8 +289,106 @@ void Player::setTextures(float dt)
     }
 }
 
+void Player::update(float dt)
+{
+    if (invulnerabilityTimer > 0)
+    {
+        invulnerabilityTimer -= dt;
+    }
+
+    if (attackCooldown > 0)
+    {
+        attackCooldown -= dt;
+    }
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::J) && attackCooldown <= 0) // 
+    {
+        currentState = EntityState::Attacking;
+        hasAttackedThisFrame = true;
+        attackCooldown = ATTACK_COOLDOWN_MAX;
+        animationAttack.reset();
+
+    }
+
+    if (hp <= 0.001)
+    {
+        currentState = EntityState::Dying;
+        //animationDead.reset();
+    }
+
+    if (currentState != EntityState::Dying && currentState != EntityState::Attacking) // 
+    {
+        velocity.x = 0.0f;
+
+        // poruszanie sie w lewo
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) ||
+            sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+        {
+            velocity.x = -speed;
+            faceRight = false;
+        }
+
+        // poruszanie sie w prawo
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) ||
+            sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+        {
+            velocity.x = speed;
+            faceRight = true;
+        }
+
+        // skok
+        if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Space) ||
+            sf::Keyboard::isKeyPressed(sf::Keyboard::W) ||
+            sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+            && canJump && (isOnGround || wasOnGround))
+        {
+            velocity.y = -sqrtf(2.f * g * h);
+
+            if (wasOnGround)
+            {
+                wasOnGround = false;
+            }
+            else
+            {
+                isOnGround = false;
+                wasOnGround = true;
+            }
+        }
+        velocity.y += g * dt;
+        //velocity.y = 0; // do testów poziomów
+        move(velocity * dt);
+
+        if (!isOnGround)
+        {
+            currentState = EntityState::Jumping;
+            //if (velocity.y < 0.0f) currentState = EntityState::Jumping; //830.0f
+            //else currentState = EntityState::Idle;
+        }
+        else
+        {
+            if (std::abs(velocity.x) > 0.0f) currentState = EntityState::Running;
+            else currentState = EntityState::Idle;
+        }
+    }
+    /*else if (currentState == EntityState::Attacking)
+    {
+        velocity.x = 0.0f;
+    }
+    else if (currentState == EntityState::Dying)
+    {
+        velocity.x = 0.0f;
+        velocity.y = 0.0f;
+    }*/
+
+
+}
+
+//int jumpCount = 2;
 //void Player::update(float dt)
 //{
+//
+//    //cout << "jumpCount" << jumpCount << endl;
+//
 //    if (invulnerabilityTimer > 0)
 //    {
 //        invulnerabilityTimer -= dt;
@@ -376,58 +399,73 @@ void Player::setTextures(float dt)
 //        attackCooldown -= dt;
 //    }
 //
-//    if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) // && attackCooldown <= 0
+//    if (sf::Keyboard::isKeyPressed(sf::Keyboard::J) && attackCooldown <= 0) // 
 //    {
 //        currentState = EntityState::Attacking;
+//        soundAttack.play();
 //        hasAttackedThisFrame = true;
 //        attackCooldown = ATTACK_COOLDOWN_MAX;
 //        animationAttack.reset();
-//
 //    }
 //
 //    if (hp <= 0.001)
 //    {
 //        currentState = EntityState::Dying;
 //        //animationDead.reset();
+//        //soundAttack.setPlayingOffset(sf::seconds(5.f));
 //    }
 //
-//    if (currentState != EntityState::Dying && currentState != EntityState::Attacking)
+//    if (currentState != EntityState::Dying) // && currentState != EntityState::Attacking
 //    {
+//        //obowiazkowy
 //        velocity.x = 0.0f;
 //
+//        bool currentlyPressingMoveKey = false;
 //        // poruszanie sie w lewo
 //        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) ||
 //            sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 //        {
+//            currentlyPressingMoveKey = true;
 //            velocity.x = -speed;
 //            faceRight = false;
 //        }
 //
 //        // poruszanie sie w prawo
-//        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) ||
+//        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) ||
 //            sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 //        {
+//            currentlyPressingMoveKey = true;
 //            velocity.x = speed;
 //            faceRight = true;
 //        }
+//        if (currentlyPressingMoveKey && velocity.x != 0 && isOnGround)
+//        {
+//            if (soundRun.getStatus() != sf::Sound::Playing)
+//            {
+//                soundRun.play();
+//                soundRun.setPlayingOffset(sf::seconds(2.f));
+//            }
+//        }
+//        else
+//        {
+//            if (soundRun.getStatus() == sf::Sound::Playing)
+//            {
+//                soundRun.stop();
+//            }
+//        }
+//
 //
 //        // skok
 //        if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Space) ||
 //            sf::Keyboard::isKeyPressed(sf::Keyboard::W) ||
 //            sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-//            //&& canJump && isOnGround)
-//            && canJump && currentState != EntityState::PushingDown)
+//            && canJump && currentState != EntityState::PushingDown && !isJumping && jumpCount > 0)
 //        {
-//          /*  velocity.y = -sqrtf(2.0f * g * h);
-//            canJump = false;
-//            isOnGround = false;*/
-//
-//
+//            soundJump.play();
 //            //to dziala, ale problem polega na tym ze update jest wywolywany dla kazdej klatki, a wiec jumpCount zmienia sie chwilowo 
-//           //jumpCount--;
-//           //cout << jumpCount << endl;
+//            //jumpCount--;
+//            //cout << jumpCount << endl;
 //            velocity.y = -sqrtf(2.0f * g * h);
-//
 //            //podwójny skok
 //            if (canDoubleJump)
 //            {
@@ -445,8 +483,11 @@ void Player::setTextures(float dt)
 //            {
 //                canJump = false;
 //            }
+//   
 //            isOnGround = false;
+//      
 //        }
+//
 //        else if ((sf::Keyboard::isKeyPressed(sf::Keyboard::S) ||
 //            sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 //            && canPushDown && currentState != EntityState::Jumping && !touchWalls)
@@ -454,7 +495,7 @@ void Player::setTextures(float dt)
 //            currentState = EntityState::PushingDown;
 //            velocity.y = 1500.f;
 //        }
-//        if (touchWalls && !isOnGround && canClimbWalls) // Только если касаемся стены, не на земле, и можем лазать
+//        if (touchWalls && !isOnGround && canClimbWalls) 
 //        {
 //            if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) ||
 //                sf::Keyboard::isKeyPressed(sf::Keyboard::Up)
@@ -473,210 +514,49 @@ void Player::setTextures(float dt)
 //                // isOnGround = false;
 //            }
 //        }
-//        if (currentState != EntityState::PushingDown)
+//
+//
+//        velocity.y += g * dt;
+//
+//
+//        if (isOnGround)
 //        {
-//            velocity.y += g * dt;
+//            isJumping = false; 
+//            jumpCount = 2;     
+//            canJump = true;    
 //        }
-//       
-//        //velocity.y = 0; // do testów poziomów
-//        move(velocity * dt);
+//
+//
+//
+//
 //
 //        if (!isOnGround)
 //        {
-//            if (velocity.y < 0.0f) currentState = EntityState::Jumping; //830.0f
-//            else currentState = EntityState::Idle;
+//            if (currentState != EntityState::PushingDown)
+//            {
+//                if (velocity.y < 0.0f) currentState = EntityState::Jumping; //830.0f
+//                else currentState = EntityState::Idle;
+//            }
 //        }
 //        else
 //        {
 //            if (std::abs(velocity.x) > 0.0f) currentState = EntityState::Running;
 //            else currentState = EntityState::Idle;
-//            velocity.y = 0.0f;
 //        }
 //    }
-//    else if (currentState == EntityState::Attacking)
+//    /*else if (currentState == EntityState::Attacking)
 //    {
 //        velocity.x = 0.0f;
 //    }
+//
 //    else if (currentState == EntityState::Dying)
 //    {
 //        velocity.x = 0.0f;
 //        velocity.y = 0.0f;
-//    }
+//    }*/
+//
+//    
 //}
-
-int jumpCount = 2;
-void Player::update(float dt)
-{
-
-    //cout << "jumpCount" << jumpCount << endl;
-
-    if (invulnerabilityTimer > 0)
-    {
-        invulnerabilityTimer -= dt;
-    }
-
-    if (attackCooldown > 0)
-    {
-        attackCooldown -= dt;
-    }
-
-    //touchWalls = false;
-    //isOnGround = false;
-
-    if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && attackCooldown <= 0)
-    {
-        currentState = EntityState::Attacking;
-        soundAttack.play();
-        hasAttackedThisFrame = true;
-        attackCooldown = ATTACK_COOLDOWN_MAX;
-        animationAttack.reset();
-    }
-
-    if (hp <= 0.001)
-    {
-        currentState = EntityState::Dying;
-        //animationDead.reset();
-        //soundAttack.setPlayingOffset(sf::seconds(5.f));
-    }
-
-    if (currentState != EntityState::Dying && currentState != EntityState::Attacking)
-    {
-        //obowiazkowy
-        velocity.x = 0.0f;
-
-        bool currentlyPressingMoveKey = false;
-        // poruszanie sie w lewo
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) ||
-            sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-        {
-            currentlyPressingMoveKey = true;
-            velocity.x = -speed;
-            faceRight = false;
-        }
-
-        // poruszanie sie w prawo
-        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) ||
-            sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-        {
-            currentlyPressingMoveKey = true;
-            velocity.x = speed;
-            faceRight = true;
-        }
-        if (currentlyPressingMoveKey && velocity.x != 0 && isOnGround)
-        {
-            if (soundRun.getStatus() != sf::Sound::Playing)
-            {
-                soundRun.play();
-                soundRun.setPlayingOffset(sf::seconds(2.f));
-            }
-        }
-        else
-        {
-            if (soundRun.getStatus() == sf::Sound::Playing)
-            {
-                soundRun.stop();
-            }
-        }
-
-
-        // skok
-        if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Space) ||
-            sf::Keyboard::isKeyPressed(sf::Keyboard::W) ||
-            sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-            && canJump && currentState != EntityState::PushingDown && !isJumping && jumpCount > 0)
-        {
-            soundJump.play();
-            //to dziala, ale problem polega na tym ze update jest wywolywany dla kazdej klatki, a wiec jumpCount zmienia sie chwilowo 
-            //jumpCount--;
-            //cout << jumpCount << endl;
-            velocity.y = -sqrtf(2.0f * g * h);
-            //podwójny skok
-            if (canDoubleJump)
-            {
-                /*if (jumpCount < 1)
-                {
-                    canJump = false;
-                }
-                else
-                {
-                    canJump = true;
-                }*/
-                canJump = true;
-            }
-            else
-            {
-                canJump = false;
-            }
-   
-            isOnGround = false;
-      
-        }
-
-        else if ((sf::Keyboard::isKeyPressed(sf::Keyboard::S) ||
-            sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-            && canPushDown && currentState != EntityState::Jumping && !touchWalls)
-        {
-            currentState = EntityState::PushingDown;
-            velocity.y = 1500.f;
-        }
-        if (touchWalls && !isOnGround && canClimbWalls) 
-        {
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) ||
-                sf::Keyboard::isKeyPressed(sf::Keyboard::Up)
-                && touchWalls)
-            {
-                currentState = EntityState::Idle;
-                velocity.y = -200.0f;
-                //isOnGround = false;
-            }
-            else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) ||
-                sf::Keyboard::isKeyPressed(sf::Keyboard::Down)
-                && touchWalls)
-            {
-                currentState = EntityState::Idle;
-                velocity.y = 200.0f;
-                // isOnGround = false;
-            }
-        }
-
-
-        velocity.y += g * dt;
-
-
-        if (isOnGround)
-        {
-            isJumping = false; 
-            jumpCount = 2;     
-            canJump = true;    
-        }
-
-
-
-
-
-        if (!isOnGround)
-        {
-            if (currentState != EntityState::PushingDown)
-            {
-                if (velocity.y < 0.0f) currentState = EntityState::Jumping; //830.0f
-                else currentState = EntityState::Idle;
-            }
-        }
-        else
-        {
-            if (std::abs(velocity.x) > 0.0f) currentState = EntityState::Running;
-            else currentState = EntityState::Idle;
-            velocity.y = 0.0f;
-        }
-    }
-
-    else if (currentState == EntityState::Dying)
-    {
-        velocity.x = 0.0f;
-        velocity.y = 0.0f;
-    }
-    move(velocity * dt);
-}
 
 Enemy::Enemy(vector<sf::Texture*> textures, sf::Vector2f position) :
     Entity(position),
@@ -760,6 +640,8 @@ void Enemy::OnCollision(Entity& other, float dt)
         {
             SetHP(player->GetDamage());
             SetInvulnerable(INVULNERABILITY_DURATION);
+            if (hp > 0)
+                currentState = EntityState::Hitted;
         }
 
 
@@ -994,7 +876,7 @@ void Boar::Update(float dt, Player& player) {
 }
 
 
-Bee::Bee(vector<sf::Texture*> textures, vector<sf::SoundBuffer*> sounds, sf::Vector2f pos):
+Bee::Bee(vector<sf::Texture*> textures, vector<sf::SoundBuffer*> sounds, sf::Vector2f pos) :
     Enemy(textures, pos),
 
     flyTexture(textures[0]),
@@ -1233,6 +1115,20 @@ void Bee::Update(float dt, Player& player)
         if (animationAttack.isFinished())
         {
             currentState = EntityState::Flying;
+        }
+        break;
+    case EntityState::Hitted:
+        animationHit.setFinished(false);
+        setTexture(*hitTexture);
+        animationHit.update(0, dt, faceRight);
+        setTextureRect(animationHit.uvRect);
+        if (animationHit.isFinished())
+        {
+            if (hp <= 0.0f)
+            {
+                //enemy is dead
+            }
+            else currentState = EntityState::Flying;
         }
         break;
     }

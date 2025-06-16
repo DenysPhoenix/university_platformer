@@ -4,200 +4,130 @@
 #include <vector>
 #include "klasy.h"
 
-//
-//static const float VIEW_HEIGHT = 512.0f;
-//
-//void ResizeView(const sf::RenderWindow& window, sf::View& view)
-//{
-//    float aspectRatio = static_cast<float>(window.getSize().x) / static_cast<float>(window.getSize().y);
-//    view.setSize(VIEW_HEIGHT * aspectRatio, VIEW_HEIGHT);
-//}
-//
-//
-//int main()
-//{
-//    sf::RenderWindow window(sf::VideoMode(800, 600), "Game");
-//    window.setFramerateLimit(60);
-//
-//    sf::View view(sf::Vector2f(0.0f, 0.0f), sf::Vector2f(VIEW_HEIGHT, VIEW_HEIGHT));
-//    ResizeView(window, view);
-//
-//    sf::Texture heroIdle, heroRun, heroJump, heroAttack, heroDead;
-//    heroIdle.loadFromFile("grafiki/hero-Idle.png");
-//    heroRun.loadFromFile("grafiki/hero-Run.png");
-//    heroJump.loadFromFile("grafiki/hero-Jump.png");
-//    heroAttack.loadFromFile("grafiki/hero-Attack.png");
-//    heroDead.loadFromFile("grafiki/hero-Dead.png");
-//
-//    vector<sf::Texture*> player_textures;
-//    player_textures.emplace_back(&heroIdle);
-//    player_textures.emplace_back(&heroRun);
-//    player_textures.emplace_back(&heroJump);
-//    player_textures.emplace_back(&heroAttack);
-//    player_textures.emplace_back(&heroDead);
-//
-//    Player hero(player_textures, sf::Vector2f(400.f, 325.f));
-//
-//    sf::Texture staticTex, levTex, moveTex;
-//    staticTex.loadFromFile("grafiki/static.png");
-//    levTex.loadFromFile("grafiki/levitating.png");
-//    moveTex.loadFromFile("grafiki/moveable.png");
-//
-//    vector<Platform> platforms;
-//    /*platforms.emplace_back(Platform(&staticTex, sf::Vector2f(100.f, 75.f), sf::Vector2f(100.f, 400.f), PlatformType::Static));
-//    platforms.emplace_back(Platform(&levTex, sf::Vector2f(100.f, 75.f), sf::Vector2f(300.f, 400.f), PlatformType::Levitating));
-//    platforms.emplace_back(Platform(&staticTex, sf::Vector2f(100.f, 75.f), sf::Vector2f(500.f, 400.f), PlatformType::Static));
-//    platforms.emplace_back(Platform(&moveTex,sf::Vector2f(100.f, 75.f), sf::Vector2f(590.f, 325.f), PlatformType::Moveable));
-//    platforms.emplace_back(Platform(&staticTex, sf::Vector2f(100.f, 75.f), sf::Vector2f(670.f, 325.f), PlatformType::Static));*/
-//
-//    platforms.emplace_back(Platform(&staticTex, sf::Vector2f(100.f, 75.f), sf::Vector2f(100.f, 400.f), PlatformType::Static));
-//    platforms.emplace_back(Platform(&staticTex, sf::Vector2f(100.f, 75.f), sf::Vector2f(200.f, 400.f), PlatformType::Static));
-//    platforms.emplace_back(Platform(&staticTex, sf::Vector2f(100.f, 75.f), sf::Vector2f(300.f, 400.f), PlatformType::Static));
-//    platforms.emplace_back(Platform(&staticTex, sf::Vector2f(100.f, 75.f), sf::Vector2f(400.f, 400.f), PlatformType::Static));
-//    platforms.emplace_back(Platform(&staticTex, sf::Vector2f(100.f, 75.f), sf::Vector2f(500.f, 400.f), PlatformType::Static));
-//    platforms.emplace_back(Platform(&staticTex, sf::Vector2f(100.f, 75.f), sf::Vector2f(600.f, 400.f), PlatformType::Static));
-//    platforms.emplace_back(Platform(&staticTex, sf::Vector2f(100.f, 75.f), sf::Vector2f(700.f, 400.f), PlatformType::Static));
-//    platforms.emplace_back(Platform(&staticTex, sf::Vector2f(100.f, 75.f), sf::Vector2f(800.f, 400.f), PlatformType::Static));
-//    platforms.emplace_back(Platform(&staticTex, sf::Vector2f(100.f, 75.f), sf::Vector2f(900.f, 400.f), PlatformType::Static));
-//    platforms.emplace_back(Platform(&staticTex, sf::Vector2f(100.f, 75.f), sf::Vector2f(1000.f, 400.f), PlatformType::Static));
-//
-//    sf::Texture boarIdle, boarWalk, boarRun, boarHit;
-//    boarIdle.loadFromFile("grafiki/boar-Idle.png");
-//    boarWalk.loadFromFile("grafiki/boar-Walk.png");
-//    boarRun.loadFromFile("grafiki/boar-Run.png");
-//    boarHit.loadFromFile("grafiki/boar-Hit.png");
-//
-//    vector<sf::Texture*> boar_textures;
-//    boar_textures.emplace_back(&boarIdle);
-//    boar_textures.emplace_back(&boarWalk);
-//    boar_textures.emplace_back(&boarRun);
-//    boar_textures.emplace_back(&boarHit);
-//
-//    sf::Texture beeFly, beeAttack, beeHit;
-//    beeFly.loadFromFile("grafiki/bee-Fly.png");
-//    beeAttack.loadFromFile("grafiki/bee-Attack.png");
-//    beeHit.loadFromFile("grafiki/bee-Hit.png");
-//
-//    vector<sf::Texture*> bee_textures;
-//    bee_textures.emplace_back(&beeFly);
-//    bee_textures.emplace_back(&beeAttack);
-//    bee_textures.emplace_back(&beeHit);
-//
-//    vector<unique_ptr<Enemy>> enemies;
-//    enemies.emplace_back(make_unique<Boar>(boar_textures, sf::Vector2f(950.f, 325.f)));
-//    enemies.emplace_back(make_unique<Bee>(bee_textures, sf::Vector2f(600.f, 150.f)));
-//
-//    sf::Clock clock;
-//
-//    while (window.isOpen())
-//    {
-//        sf::Event event;
-//        while (window.pollEvent(event))
-//        {
-//            if (event.type == sf::Event::Closed)
-//                window.close();
-//            if (event.type == sf::Event::Resized)
-//                ResizeView(window, view);
-//        }
-//
-//        float dt = clock.restart().asSeconds();
-//
-//        if (dt > 1.0f / 20.0f) //by nie bylo baga przy naglej zmianie okna
-//            dt = 1.0f / 20.0f;
-//
-//        window.clear(sf::Color::Black);
-//        view.setCenter(hero.GetPosition());
-//
-//        window.setView(view);
-//
-//
-//        for (Platform& platform : platforms)
-//        {
-//            platform.update(dt);
-//            window.draw(platform);
-//        }
-//
-//        //for (Enemy& enemy : enemies)
-//        //{
-//        //    enemy.Update(dt, hero);
-//        //    //enemy.CheckPlatformCollision(platforms, hero, dt);
-//        //    //window.draw(enemy);
-//        //}
-//
-//        for (unique_ptr<Enemy>& enemy : enemies)
-//        {
-//            enemy->Update(dt, hero);
-//            enemy->update(dt);
-//            window.draw(*enemy);
-//        }
-//
-//        window.draw(hero);
-//        hero.update(dt);
-//        // hero.PlayerCheckPlatformCollision(platforms/*, enemies*/, dt);
-//
-//         //================collisions====================
-//          // 1) hero and platforms
-//        for (Platform& platform : platforms)
-//        {
-//            if (hero.GetCollider().intersects(platform.GetCollider()))
-//            {
-//                hero.OnCollision(platform, dt);
-//                // Если платформа должна реагировать на игрока, то раскомментируйте:
-//                // platform.OnCollision(hero, dt);
-//            }
-//        }
-//
-//        // 2) enemies and platforms
-//        for (std::unique_ptr<Enemy>& enemyPtr : enemies)
-//        {
-//            Enemy& enemy = *enemyPtr;
-//            for (Platform& platform : platforms)
-//            {
-//                if (enemy.GetCollider().intersects(platform.GetCollider()))
-//                {
-//                    enemy.OnCollision(platform, dt);
-//                    // Если платформа должна реагировать на врага, то раскомментируйте:
-//                    // platform.OnCollision(enemy, dt);
-//                }
-//            }
-//        }
-//
-//        // 3) hero and enemies
-//        for (std::unique_ptr<Enemy>& enemyPtr : enemies)
-//        {
-//            Enemy& enemy = *enemyPtr;
-//            if (hero.GetCollider().intersects(enemy.GetCollider()))
-//            {
-//                // Игрок атакует врага, или враг атакует игрока
-//                hero.OnCollision(enemy, dt);
-//                enemy.OnCollision(hero, dt);
-//            }
-//        }
-//
-//        hero.ResetAttackFlag();
-//
-//
-//
-//        enemies.erase(std::remove_if(enemies.begin(), enemies.end(),
-//            [](const std::unique_ptr<Enemy>& enemy) {
-//                return enemy->GetHP() <= 0.0f;
-//            }),
-//            enemies.end());
-//
-//        window.display();
-//    }
-//    return 0;
-//}
 
 int main()
 {
-	// powołujemy silnik który całą grę nam uruchamia i tylko aktualizuje i wyświetla i do tamtych funkcji wkładamy funkcje które mają działać
-    Silnik gra;
-	while (gra.czyokno())
+	//sf::SoundBuffer buffer;
+	//if (!buffer.loadFromFile("dzwieki/soundJump.mp3"))
+	//	return -1;
+
+	//sf::Sound sound;
+	//sound.setBuffer(buffer);
+	//sound.play();
+	
+    
+	sf::RenderWindow window(sf::VideoMode(1920, 1080), "Menu");
+	window.setFramerateLimit(60);
+
+	Button PlayButton(sf::Vector2f(660, 300), sf::Vector2f(600, 200), "PLAY");
+	Button ExitButton(sf::Vector2f(660, 500), sf::Vector2f(600, 200), "EXIT");
+	GameState currentGameState = MENU;
+
+	sf::Texture heroIdle, staticTex, boarIdle, beeIdle;
+	heroIdle.loadFromFile("grafiki/hero-Idle.png");
+	staticTex.loadFromFile("Tiles.png");
+	boarIdle.loadFromFile("grafiki/boar-Idle.png");
+	beeIdle.loadFromFile("grafiki/bee-Fly.png");
+
+	sf::Sprite bohater, boar, bee, krzak;
+	bohater.setTexture(heroIdle);
+	bohater.setScale(3.0, 3.0f);
+	bohater.setTextureRect(sf::IntRect(0, 0, heroIdle.getSize().x / 4, heroIdle.getSize().y));
+	bohater.setPosition(400.f, 815.f);
+
+	boar.setTexture(boarIdle);
+	boar.setScale(4.0, 4.0f);
+	boar.setTextureRect(sf::IntRect(0, 0, boarIdle.getSize().x / 4, boarIdle.getSize().y));
+	boar.setPosition(1000.f, 835.f);
+
+	bee.setTexture(beeIdle);
+	bee.setScale(4.0, 4.0f);
+	bee.setTextureRect(sf::IntRect(0, 0, beeIdle.getSize().x / 4, beeIdle.getSize().y));
+	bee.setPosition(1450.f, 650.f);
+
+	vector<sf::Sprite> ziemia;
+	for (int i = 0; i < 14; i++)
 	{
-		gra.aktualizacja();
-		gra.wyswietlenie();
+		sf::Sprite el;
+		el.setTexture(staticTex);
+		el.setScale(2.0, 2.0f);
+		el.setTextureRect(sf::IntRect(0, 9, 77, 83));
+		el.setPosition(i*140.f-20, 950.f);
+		ziemia.emplace_back(el);
 	}
+
+	sf::RectangleShape menu(sf::Vector2f(120.f, 50.f));
+	menu.setSize(sf::Vector2f(1920, 250));
+	menu.setFillColor(sf::Color(255, 150, 0));
+
+	sf::Font font;
+	sf::Text title;
+	title.setString("MOON WALKER");
+	font.loadFromFile("grafiki/Super-Mario-Font.ttf");
+	title.setFont(font);
+	title.setFillColor(sf::Color(39, 127, 163));
+	title.setCharacterSize(70);
+
+	sf::FloatRect shapeBounds = menu.getGlobalBounds();
+	sf::FloatRect textBounds = title.getLocalBounds();
+	float x = shapeBounds.left + (shapeBounds.width - textBounds.width) / 2.f;
+	float y = shapeBounds.top + (shapeBounds.height - textBounds.height) / 2.f;
+	// textBounds.left/top > 0
+	x -= textBounds.left;
+	y -= textBounds.top;
+	title.setPosition(x, y);
+
+	while (window.isOpen())
+	{
+		sf::Event event;
+
+		while (window.pollEvent(event))
+		{
+			if (event.type == sf::Event::Closed)
+				window.close();
+			
+
+			if (currentGameState == MENU)
+			{
+				if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
+				{
+					sf::Vector2i mousePosition(event.mouseButton.x, event.mouseButton.y);
+					if (PlayButton.isClicked(mousePosition, window))
+					{
+						window.close();
+						Silnik gra;
+						while (gra.czyokno())
+						{
+							gra.aktualizacja();
+							gra.wyswietlenie();
+						}
+					}
+					if (ExitButton.isClicked(mousePosition, window))
+					{
+						window.close();
+					}
+				}
+			}
+		}
+
+		window.clear(sf::Color(255, 186, 0, 0));
+		window.setView(window.getDefaultView()); 
+		PlayButton.draw(window);
+		ExitButton.draw(window);
+		window.draw(menu);
+		window.draw(title);
+		window.draw(bohater);
+		window.draw(boar);
+		window.draw(bee);
+
+		for (sf::Sprite& el : ziemia)
+		{
+			window.draw(el);
+		}
+		window.display();
+
+	}
+
     return 0;
 }
 

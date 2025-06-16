@@ -6,32 +6,6 @@
 #include <iostream>
 using namespace std;
 
-//class Animation
-//{
-//public:
-//	Animation(sf::Texture* texture, int imageCount, float switchTime);
-//	~Animation();
-//
-//    void update(float deltaTime, bool faceRight);
-//    void reset();
-//    //sf::IntRect uvRect;
-//    
-//
-//private:
-//    sf::Texture texture1;
-//
-//    float wys, szer;
-//    int currentImage = 0;
-//    int imageCount;
-//    float totalTime = 0.0f;
-//    float switchTime;
-//
-//    bool paused;
-//    bool finished;
-//    bool loop; 
-//    bool isPaused = false;
-//};
-
 class Animation
 {
 public:
@@ -76,7 +50,7 @@ enum class EntityState
     //stany osobliwe dla Enemy
     //dla Boar
     Walking,
-
+    Hitted,
     //dla Bee
     Flying
 };
@@ -202,7 +176,8 @@ public:
 public:
     //zmienne
     const float INVULNERABILITY_DURATION = 1.0f;
-
+    bool isOnGround;
+    bool wasOnGround = false;
 private:
     //wlasnosci fizyczne
     sf::Vector2f velocity;
@@ -214,7 +189,7 @@ private:
     bool canPushDown;
 
     //wlasnosci oddzialywania na inne Entity
-    bool canJump, isOnGround, hasAttackedThisFrame;
+    bool canJump, hasAttackedThisFrame;
     float attackCooldown, invulnerabilityTimer;
     const float ATTACK_COOLDOWN_MAX = 0.5f;
     float attackDuration = 0.5f;
