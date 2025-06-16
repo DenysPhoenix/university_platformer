@@ -43,6 +43,10 @@ private:
 	vector<sf::SoundBuffer*> player_sounds;
 	sf::RectangleShape hitboxPlayer;
 
+	// obsługa mapy
+	sf::Sprite mapa;
+	sf::RectangleShape shape1;
+
 	//obsluga Enemy
 
 	//obsluga dzika
@@ -63,8 +67,8 @@ private:
 	float enemySpawnTimer;
 	float enemySpawnTimerMAX;
 	float dt;
-	int poz_x = 1;
-	int poz_y = 1;
+	int poz_x = 0;
+	int poz_y = 0;
 	int orient_x = 240;
 	int orient_y = 270;
 

@@ -1,86 +1,97 @@
 ﻿  silnik.cpp
 C:\projects\University_platformer\silnik.cpp(148,32): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
 C:\projects\University_platformer\silnik.cpp(148,22): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
-C:\projects\University_platformer\silnik.cpp(186,103): warning C4244: "argument": konwersja z "int" do "T", możliwa utrata danych
-C:\projects\University_platformer\silnik.cpp(186,103): warning C4244:         with
-C:\projects\University_platformer\silnik.cpp(186,103): warning C4244:         [
-C:\projects\University_platformer\silnik.cpp(186,103): warning C4244:             T=float
-C:\projects\University_platformer\silnik.cpp(186,103): warning C4244:         ]
-C:\projects\University_platformer\silnik.cpp(186,87): warning C4244: "argument": konwersja z "int" do "T", możliwa utrata danych
-C:\projects\University_platformer\silnik.cpp(186,87): warning C4244:         with
-C:\projects\University_platformer\silnik.cpp(186,87): warning C4244:         [
-C:\projects\University_platformer\silnik.cpp(186,87): warning C4244:             T=float
-C:\projects\University_platformer\silnik.cpp(186,87): warning C4244:         ]
-C:\projects\University_platformer\silnik.cpp(190,96): warning C4244: "argument": konwersja z "int" do "T", możliwa utrata danych
-C:\projects\University_platformer\silnik.cpp(190,96): warning C4244:         with
-C:\projects\University_platformer\silnik.cpp(190,96): warning C4244:         [
-C:\projects\University_platformer\silnik.cpp(190,96): warning C4244:             T=float
-C:\projects\University_platformer\silnik.cpp(190,96): warning C4244:         ]
-C:\projects\University_platformer\silnik.cpp(190,85): warning C4244: "argument": konwersja z "int" do "T", możliwa utrata danych
-C:\projects\University_platformer\silnik.cpp(190,85): warning C4244:         with
-C:\projects\University_platformer\silnik.cpp(190,85): warning C4244:         [
-C:\projects\University_platformer\silnik.cpp(190,85): warning C4244:             T=float
-C:\projects\University_platformer\silnik.cpp(190,85): warning C4244:         ]
-C:\projects\University_platformer\silnik.cpp(203,11): warning C4244: "inicjowanie": konwersja z "T" do "float", możliwa utrata danych
-C:\projects\University_platformer\silnik.cpp(203,11): warning C4244:         with
-C:\projects\University_platformer\silnik.cpp(203,11): warning C4244:         [
-C:\projects\University_platformer\silnik.cpp(203,11): warning C4244:             T=unsigned int
-C:\projects\University_platformer\silnik.cpp(203,11): warning C4244:         ]
-C:\projects\University_platformer\silnik.cpp(204,11): warning C4244: "inicjowanie": konwersja z "T" do "float", możliwa utrata danych
-C:\projects\University_platformer\silnik.cpp(204,11): warning C4244:         with
-C:\projects\University_platformer\silnik.cpp(204,11): warning C4244:         [
-C:\projects\University_platformer\silnik.cpp(204,11): warning C4244:             T=unsigned int
-C:\projects\University_platformer\silnik.cpp(204,11): warning C4244:         ]
-C:\projects\University_platformer\silnik.cpp(218,31): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
-C:\projects\University_platformer\silnik.cpp(218,22): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
-C:\projects\University_platformer\silnik.cpp(230,22): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
-C:\projects\University_platformer\silnik.cpp(236,30): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
-C:\projects\University_platformer\silnik.cpp(248,56): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
-C:\projects\University_platformer\silnik.cpp(248,34): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
-C:\projects\University_platformer\silnik.cpp(252,58): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
-C:\projects\University_platformer\silnik.cpp(252,34): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
-C:\projects\University_platformer\silnik.cpp(266,23): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
-C:\projects\University_platformer\silnik.cpp(269,23): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
-C:\projects\University_platformer\silnik.cpp(273,22): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
-C:\projects\University_platformer\silnik.cpp(279,31): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
-C:\projects\University_platformer\silnik.cpp(279,22): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
-C:\projects\University_platformer\silnik.cpp(288,30): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
-C:\projects\University_platformer\silnik.cpp(288,22): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
-C:\projects\University_platformer\silnik.cpp(300,33): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
-C:\projects\University_platformer\silnik.cpp(313,11): warning C4244: "inicjowanie": konwersja z "T" do "float", możliwa utrata danych
-C:\projects\University_platformer\silnik.cpp(313,11): warning C4244:         with
-C:\projects\University_platformer\silnik.cpp(313,11): warning C4244:         [
-C:\projects\University_platformer\silnik.cpp(313,11): warning C4244:             T=unsigned int
-C:\projects\University_platformer\silnik.cpp(313,11): warning C4244:         ]
-C:\projects\University_platformer\silnik.cpp(314,11): warning C4244: "inicjowanie": konwersja z "T" do "float", możliwa utrata danych
-C:\projects\University_platformer\silnik.cpp(314,11): warning C4244:         with
-C:\projects\University_platformer\silnik.cpp(314,11): warning C4244:         [
-C:\projects\University_platformer\silnik.cpp(314,11): warning C4244:             T=unsigned int
-C:\projects\University_platformer\silnik.cpp(314,11): warning C4244:         ]
-C:\projects\University_platformer\silnik.cpp(323,27): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
-C:\projects\University_platformer\silnik.cpp(359,34): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
-C:\projects\University_platformer\silnik.cpp(359,23): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
-C:\projects\University_platformer\silnik.cpp(392,48): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
-C:\projects\University_platformer\silnik.cpp(392,28): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
-C:\projects\University_platformer\silnik.cpp(487,15): warning C4305: "argument": obcięcie z "double" do "float"
-C:\projects\University_platformer\silnik.cpp(689,35): warning C4244: "=": konwersja z "T" do "int", możliwa utrata danych
-C:\projects\University_platformer\silnik.cpp(689,35): warning C4244:         with
-C:\projects\University_platformer\silnik.cpp(689,35): warning C4244:         [
-C:\projects\University_platformer\silnik.cpp(689,35): warning C4244:             T=float
-C:\projects\University_platformer\silnik.cpp(689,35): warning C4244:         ]
-C:\projects\University_platformer\silnik.cpp(696,35): warning C4244: "=": konwersja z "T" do "int", możliwa utrata danych
-C:\projects\University_platformer\silnik.cpp(696,35): warning C4244:         with
-C:\projects\University_platformer\silnik.cpp(696,35): warning C4244:         [
-C:\projects\University_platformer\silnik.cpp(696,35): warning C4244:             T=float
-C:\projects\University_platformer\silnik.cpp(696,35): warning C4244:         ]
-C:\projects\University_platformer\silnik.cpp(703,35): warning C4244: "=": konwersja z "T" do "int", możliwa utrata danych
-C:\projects\University_platformer\silnik.cpp(703,35): warning C4244:         with
-C:\projects\University_platformer\silnik.cpp(703,35): warning C4244:         [
-C:\projects\University_platformer\silnik.cpp(703,35): warning C4244:             T=float
-C:\projects\University_platformer\silnik.cpp(703,35): warning C4244:         ]
-C:\projects\University_platformer\silnik.cpp(710,35): warning C4244: "=": konwersja z "T" do "int", możliwa utrata danych
-C:\projects\University_platformer\silnik.cpp(710,35): warning C4244:         with
-C:\projects\University_platformer\silnik.cpp(710,35): warning C4244:         [
-C:\projects\University_platformer\silnik.cpp(710,35): warning C4244:             T=float
-C:\projects\University_platformer\silnik.cpp(710,35): warning C4244:         ]
+C:\projects\University_platformer\silnik.cpp(153,75): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
+C:\projects\University_platformer\silnik.cpp(153,47): warning C4244: "argument": konwersja z "T" do "float", możliwa utrata danych
+C:\projects\University_platformer\silnik.cpp(153,47): warning C4244:         with
+C:\projects\University_platformer\silnik.cpp(153,47): warning C4244:         [
+C:\projects\University_platformer\silnik.cpp(153,47): warning C4244:             T=unsigned int
+C:\projects\University_platformer\silnik.cpp(153,47): warning C4244:         ]
+C:\projects\University_platformer\silnik.cpp(155,39): warning C4244: "argument": konwersja z "T" do "float", możliwa utrata danych
+C:\projects\University_platformer\silnik.cpp(155,39): warning C4244:         with
+C:\projects\University_platformer\silnik.cpp(155,39): warning C4244:         [
+C:\projects\University_platformer\silnik.cpp(155,39): warning C4244:             T=unsigned int
+C:\projects\University_platformer\silnik.cpp(155,39): warning C4244:         ]
+C:\projects\University_platformer\silnik.cpp(193,103): warning C4244: "argument": konwersja z "int" do "T", możliwa utrata danych
+C:\projects\University_platformer\silnik.cpp(193,103): warning C4244:         with
+C:\projects\University_platformer\silnik.cpp(193,103): warning C4244:         [
+C:\projects\University_platformer\silnik.cpp(193,103): warning C4244:             T=float
+C:\projects\University_platformer\silnik.cpp(193,103): warning C4244:         ]
+C:\projects\University_platformer\silnik.cpp(193,87): warning C4244: "argument": konwersja z "int" do "T", możliwa utrata danych
+C:\projects\University_platformer\silnik.cpp(193,87): warning C4244:         with
+C:\projects\University_platformer\silnik.cpp(193,87): warning C4244:         [
+C:\projects\University_platformer\silnik.cpp(193,87): warning C4244:             T=float
+C:\projects\University_platformer\silnik.cpp(193,87): warning C4244:         ]
+C:\projects\University_platformer\silnik.cpp(197,96): warning C4244: "argument": konwersja z "int" do "T", możliwa utrata danych
+C:\projects\University_platformer\silnik.cpp(197,96): warning C4244:         with
+C:\projects\University_platformer\silnik.cpp(197,96): warning C4244:         [
+C:\projects\University_platformer\silnik.cpp(197,96): warning C4244:             T=float
+C:\projects\University_platformer\silnik.cpp(197,96): warning C4244:         ]
+C:\projects\University_platformer\silnik.cpp(197,85): warning C4244: "argument": konwersja z "int" do "T", możliwa utrata danych
+C:\projects\University_platformer\silnik.cpp(197,85): warning C4244:         with
+C:\projects\University_platformer\silnik.cpp(197,85): warning C4244:         [
+C:\projects\University_platformer\silnik.cpp(197,85): warning C4244:             T=float
+C:\projects\University_platformer\silnik.cpp(197,85): warning C4244:         ]
+C:\projects\University_platformer\silnik.cpp(210,11): warning C4244: "inicjowanie": konwersja z "T" do "float", możliwa utrata danych
+C:\projects\University_platformer\silnik.cpp(210,11): warning C4244:         with
+C:\projects\University_platformer\silnik.cpp(210,11): warning C4244:         [
+C:\projects\University_platformer\silnik.cpp(210,11): warning C4244:             T=unsigned int
+C:\projects\University_platformer\silnik.cpp(210,11): warning C4244:         ]
+C:\projects\University_platformer\silnik.cpp(211,11): warning C4244: "inicjowanie": konwersja z "T" do "float", możliwa utrata danych
+C:\projects\University_platformer\silnik.cpp(211,11): warning C4244:         with
+C:\projects\University_platformer\silnik.cpp(211,11): warning C4244:         [
+C:\projects\University_platformer\silnik.cpp(211,11): warning C4244:             T=unsigned int
+C:\projects\University_platformer\silnik.cpp(211,11): warning C4244:         ]
+C:\projects\University_platformer\silnik.cpp(225,31): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
+C:\projects\University_platformer\silnik.cpp(225,22): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
+C:\projects\University_platformer\silnik.cpp(237,22): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
+C:\projects\University_platformer\silnik.cpp(243,30): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
+C:\projects\University_platformer\silnik.cpp(255,56): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
+C:\projects\University_platformer\silnik.cpp(255,34): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
+C:\projects\University_platformer\silnik.cpp(259,58): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
+C:\projects\University_platformer\silnik.cpp(259,34): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
+C:\projects\University_platformer\silnik.cpp(273,23): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
+C:\projects\University_platformer\silnik.cpp(276,23): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
+C:\projects\University_platformer\silnik.cpp(280,22): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
+C:\projects\University_platformer\silnik.cpp(286,31): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
+C:\projects\University_platformer\silnik.cpp(286,22): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
+C:\projects\University_platformer\silnik.cpp(295,30): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
+C:\projects\University_platformer\silnik.cpp(295,22): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
+C:\projects\University_platformer\silnik.cpp(307,33): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
+C:\projects\University_platformer\silnik.cpp(320,11): warning C4244: "inicjowanie": konwersja z "T" do "float", możliwa utrata danych
+C:\projects\University_platformer\silnik.cpp(320,11): warning C4244:         with
+C:\projects\University_platformer\silnik.cpp(320,11): warning C4244:         [
+C:\projects\University_platformer\silnik.cpp(320,11): warning C4244:             T=unsigned int
+C:\projects\University_platformer\silnik.cpp(320,11): warning C4244:         ]
+C:\projects\University_platformer\silnik.cpp(321,11): warning C4244: "inicjowanie": konwersja z "T" do "float", możliwa utrata danych
+C:\projects\University_platformer\silnik.cpp(321,11): warning C4244:         with
+C:\projects\University_platformer\silnik.cpp(321,11): warning C4244:         [
+C:\projects\University_platformer\silnik.cpp(321,11): warning C4244:             T=unsigned int
+C:\projects\University_platformer\silnik.cpp(321,11): warning C4244:         ]
+C:\projects\University_platformer\silnik.cpp(328,27): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
+C:\projects\University_platformer\silnik.cpp(367,34): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
+C:\projects\University_platformer\silnik.cpp(367,23): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
+C:\projects\University_platformer\silnik.cpp(400,48): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
+C:\projects\University_platformer\silnik.cpp(400,28): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
+C:\projects\University_platformer\silnik.cpp(495,15): warning C4305: "argument": obcięcie z "double" do "float"
+C:\projects\University_platformer\silnik.cpp(697,35): warning C4244: "=": konwersja z "T" do "int", możliwa utrata danych
+C:\projects\University_platformer\silnik.cpp(697,35): warning C4244:         with
+C:\projects\University_platformer\silnik.cpp(697,35): warning C4244:         [
+C:\projects\University_platformer\silnik.cpp(697,35): warning C4244:             T=float
+C:\projects\University_platformer\silnik.cpp(697,35): warning C4244:         ]
+C:\projects\University_platformer\silnik.cpp(704,35): warning C4244: "=": konwersja z "T" do "int", możliwa utrata danych
+C:\projects\University_platformer\silnik.cpp(704,35): warning C4244:         with
+C:\projects\University_platformer\silnik.cpp(704,35): warning C4244:         [
+C:\projects\University_platformer\silnik.cpp(704,35): warning C4244:             T=float
+C:\projects\University_platformer\silnik.cpp(704,35): warning C4244:         ]
+C:\projects\University_platformer\silnik.cpp(711,35): warning C4244: "=": konwersja z "T" do "int", możliwa utrata danych
+C:\projects\University_platformer\silnik.cpp(711,35): warning C4244:         with
+C:\projects\University_platformer\silnik.cpp(711,35): warning C4244:         [
+C:\projects\University_platformer\silnik.cpp(711,35): warning C4244:             T=float
+C:\projects\University_platformer\silnik.cpp(711,35): warning C4244:         ]
+C:\projects\University_platformer\silnik.cpp(718,35): warning C4244: "=": konwersja z "T" do "int", możliwa utrata danych
+C:\projects\University_platformer\silnik.cpp(718,35): warning C4244:         with
+C:\projects\University_platformer\silnik.cpp(718,35): warning C4244:         [
+C:\projects\University_platformer\silnik.cpp(718,35): warning C4244:             T=float
+C:\projects\University_platformer\silnik.cpp(718,35): warning C4244:         ]
   University_platformer.vcxproj -> C:\projects\University_platformer\x64\Debug\University_platformer.exe

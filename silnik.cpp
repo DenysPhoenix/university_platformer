@@ -146,6 +146,13 @@ void Silnik::spawnPlayer()
 	hitboxPlayer.setFillColor(sf::Color(0, 0, 0, 0));
 	//hitboxPlayer.setFillColor(sf::Color::Red);
 	player->setPosition(orient_x, orient_y);
+
+
+	shape1.setFillColor(sf::Color::Black);
+	shape1.setSize(sf::Vector2f(50, 50));
+	shape1.setPosition(window->getSize().x - 300 + (50 * poz_x), -poz_y * 50 + 50);
+	mapa.setScale(0.5, 0.5);
+	mapa.setPosition(window->getSize().x - 300, 0);
 }
 
 void Silnik::spawnEnemy()
@@ -313,8 +320,6 @@ void Silnik::spawnPlatforms()
 	float x1 = this->window->getSize().x;
 	float y1 = this->window->getSize().y;
 	Platform pl(&staticTex, sf::Vector2f(200.f, 175.f), sf::Vector2f(0, 0), PlatformType::Static);
-	Platform lev(&levTex, sf::Vector2f(2000.f, 175.f), sf::Vector2f(1000, 800), PlatformType::Levitating);
-	platforms.emplace_back(lev);
 
 	if (poz_x == 0 && poz_y == 0)
 	{
@@ -352,6 +357,9 @@ void Silnik::spawnPlatforms()
 	}
 	else if (poz_x == 1 && poz_y == 1)
 	{
+		pl.setScale(2, 4);
+		pl.setPosition(300, y1-100);
+		platforms.emplace_back(pl);
 		for (int i = 0; i < 10; i++)
 		{
 			int los = std::rand() % 10;
@@ -704,7 +712,7 @@ void Silnik::aktualizacjaPlayer()
 		orient_x = window->getSize().x - 150;
 		this->inicjalizacjaZmiennych();
 	}
-	if (player->getPosition().y < -150)
+	if (player->getPosition().y < 0)
 	{
 		poz_y += 1;
 		orient_x = player->GetPosition().x;
@@ -810,6 +818,11 @@ void Silnik::wyswietlPlayer()
 	player->setTextures(dt);
 	this->window->draw(*player);
 	this->window->draw(hitboxPlayer);
+	hero.loadFromFile("mapa.png");
+	mapa.setTexture(hero);
+	window->draw(mapa);
+	window->draw(shape1);
+	
 }
 
 void Silnik::wyswietlEnemies()
