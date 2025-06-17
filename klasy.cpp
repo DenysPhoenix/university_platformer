@@ -285,6 +285,9 @@ void Player::setTextures(float dt)
 
 void Player::update(float dt)
 {
+    //hp -= 10;
+
+  
     if (invulnerabilityTimer > 0)
         invulnerabilityTimer -= dt;
 
@@ -409,7 +412,7 @@ Enemy::~Enemy()
 {
 }
 
-void Enemy::OnCollision(Entity& other, float dt)
+/*void Enemy::OnCollision(Entity& other, float dt)
 {
     Platform* platform = dynamic_cast<Platform*>(&other);
     if (platform)
@@ -468,6 +471,63 @@ void Enemy::OnCollision(Entity& other, float dt)
             player->SetInvulnerable(player->INVULNERABILITY_DURATION);
         }
     }
+}*/
+void Enemy::OnCollision(Entity& other, float dt)
+{
+    Platform* platform = dynamic_cast<Platform*>(&other);
+    if (platform)
+    {
+        if (!IsFlying())
+        {
+            sf::FloatRect enemyBounds = GetCollider();
+            sf::FloatRect platformBounds = platform->GetCollider();
+
+            if (enemyBounds.intersects(platformBounds))
+            {
+                sf::Vector2f overlap = sf::Vector2f
+                (
+                    std::min(enemyBounds.left + enemyBounds.width, platformBounds.left + platformBounds.width) - std::max(enemyBounds.left, platformBounds.left),
+                    std::min(enemyBounds.top + enemyBounds.height, platformBounds.top + platformBounds.height) - std::max(enemyBounds.top, platformBounds.top)
+                );
+
+                if (overlap.y < overlap.x)
+                {
+                    if (enemyBounds.top < platformBounds.top)
+                    {
+                        setPosition(getPosition().x, platformBounds.top - enemyBounds.height / 2.0f);
+                        isOnGround = true;
+                    }
+                    else setPosition(getPosition().x, platformBounds.top + platformBounds.height + enemyBounds.height / 2.0f);
+
+                    velocity.y = 0;
+                }
+                else
+                {
+                    if (enemyBounds.left < platformBounds.left)
+                        setPosition(platformBounds.left - enemyBounds.width / 2.0f, getPosition().y);
+                    else setPosition(platformBounds.left + platformBounds.width + enemyBounds.width / 2.0f, getPosition().y);
+
+                    velocity.x = 0;
+                }
+            }
+        }
+    }
+
+    Player* player = dynamic_cast<Player*>(&other);
+    if (player)
+    {
+        if (player->GetState() == EntityState::Attacking && player->HasAttackedThisFrame() && !IsInvulnerable())
+        {
+            SetHP(player->GetDamage());
+            SetInvulnerable(INVULNERABILITY_DURATION);
+        }
+
+        if (GetState() == EntityState::Attacking && !player->IsInvulnerable() && player->GetState() != EntityState::Dying)
+        {
+            player->SetHP(GetDamage());
+            player->SetInvulnerable(player->INVULNERABILITY_DURATION);
+        }
+    }
 }
 
 
@@ -501,116 +561,201 @@ Boar::~Boar()
 
 
 
+//void Boar::Update(float dt, Player& player) {
+//    if (invulnerabilityTimer > 0) invulnerabilityTimer -= dt;
+//
+//   
+//    velocity.y += g * dt;
+//
+//    sf::Vector2f playerPos = player.GetPosition();
+//    sf::Vector2f enemyPos = GetPosition();
+//
+//    bool shouldBeAttacking = false;
+//    float currentDistanceX = abs(playerPos.x - enemyPos.x);
+//    float currentDistanceY = std::abs(playerPos.y - enemyPos.y);
+//
+//    
+//    //maszyna stanów 
+//
+//    if (hp > 0.3 * maxHP)
+//    {
+//        if (currentDistanceX >= CHASE_RANGE
+//            && std::abs(playerPos.y - enemyPos.y) < GetCollider().height / 2.0f + player.GetCollider().height / 2.0f)
+//        {
+//            currentState = EntityState::Idle;
+//            velocity.x = 0.0f;
+//        }
+//        if (currentDistanceX >= ATTACK_RANGE && currentDistanceX < CHASE_RANGE 
+//            && std::abs(playerPos.y - enemyPos.y) < GetCollider().height / 2.0f + player.GetCollider().height / 2.0f)
+//        {
+//            currentState = EntityState::Walking;
+//        }
+//        else if (currentDistanceX < ATTACK_RANGE && currentDistanceX > TOUCH_RANGE 
+//            && std::abs(playerPos.y - enemyPos.y) < GetCollider().height / 2.0f + player.GetCollider().height / 2.0f)
+//        {
+//            currentState = EntityState::Running;
+//            //shouldBeAttacking = true;
+//            //velocity.x = 0.0f;
+//        }
+//        //else if(currentDistanceX == 0/* TOUCH_RANGE && currentDistanceY <= TOUCH_RANGE*/)
+//        //{
+//        //    //currentState = EntityState::Idle;
+//        //    velocity.x = 0.0f;
+//        //}
+//    }
+//    else
+//    {
+//        currentState = EntityState::Fleeing;
+//    }
+//
+//    if (playerPos.x < enemyPos.x) 
+//    {
+//        faceRight = true;
+//        if (currentState == EntityState::Walking) velocity.x = -WALK_SPEED;
+//        else if (currentState == EntityState::Running) velocity.x = -RUN_SPEED;
+//        else if (currentState == EntityState::Fleeing)
+//        {
+//            faceRight = false;
+//            velocity.x = RUN_SPEED;
+//        }
+//    }
+//    else if (playerPos.x > enemyPos.x)
+//    {
+//        faceRight = false;
+//        if (currentState == EntityState::Walking) velocity.x = WALK_SPEED;
+//        else if (currentState == EntityState::Running) velocity.x = RUN_SPEED;
+//        else if (currentState == EntityState::Fleeing)
+//        {
+//            faceRight = true;
+//            velocity.x = -RUN_SPEED;
+//        }
+//    }
+//
+// /*   EntityState previousState = currentState;
+//
+//    if (shouldBeAttacking && previousState != EntityState::Running) 
+//    {
+//        currentState = EntityState::Running;
+//        animationRun.reset();
+//    }
+//    else if (!shouldBeAttacking && currentState == EntityState::Running && animationRun.isFinished()) 
+//    {
+//        currentState = EntityState::Idle;
+//    }
+//    else if (!shouldBeAttacking && currentDistanceX >= CHASE_RANGE && currentState != EntityState::Running) 
+//    {
+//        currentState = EntityState::Idle;
+//    }*/
+//
+//    if (currentState == EntityState::Running) 
+//        if (soundAttacking.getStatus() != sf::Sound::Playing) soundAttacking.play();
+//    else if (soundAttacking.getStatus() == sf::Sound::Playing) soundAttacking.stop();
+//
+//    move(velocity * dt);
+//
+//    switch (currentState) {
+//    case EntityState::Idle:
+//        setTexture(*idleTexture);
+//        animationIdle.update(0, dt, faceRight);
+//        setTextureRect(animationIdle.uvRect);
+//        velocity.x = 0;
+//        break;
+//    case EntityState::Running:
+//        setTexture(*runTexture);
+//        animationRun.update(0, dt, faceRight);
+//        setTextureRect(animationRun.uvRect);
+//        break;
+//    case EntityState::Walking:
+//        setTexture(*walkTexture);
+//        animationWalk.update(0, dt, faceRight);
+//        setTextureRect(animationWalk.uvRect);
+//        break;
+//    case EntityState::Fleeing:
+//        setTexture(*runTexture);
+//        animationRun.update(0, dt, faceRight);
+//        setTextureRect(animationRun.uvRect);
+//        break;
+//    }
+//}
 void Boar::Update(float dt, Player& player) {
-    if (invulnerabilityTimer > 0) invulnerabilityTimer -= dt;
-
-   
-    velocity.y += g * dt;
+    if (invulnerabilityTimer > 0) {
+        invulnerabilityTimer -= dt;
+    }
 
     sf::Vector2f playerPos = player.GetPosition();
     sf::Vector2f enemyPos = GetPosition();
 
+    velocity.y += g * dt;
+
     bool shouldBeAttacking = false;
-    float currentDistanceX = abs(playerPos.x - enemyPos.x);
-    float currentDistanceY = std::abs(playerPos.y - enemyPos.y);
+    float currentDistanceX = std::abs(playerPos.x - enemyPos.x);
 
-    
-    //maszyna stanów 
+    velocity.x = 0.0f;
 
-    if (hp > 0.3 * maxHP)
-    {
-        if (currentDistanceX >= CHASE_RANGE
-            && std::abs(playerPos.y - enemyPos.y) < GetCollider().height / 2.0f + player.GetCollider().height / 2.0f)
-        {
-            currentState = EntityState::Idle;
-            velocity.x = 0.0f;
-        }
-        if (currentDistanceX >= ATTACK_RANGE && currentDistanceX < CHASE_RANGE 
-            && std::abs(playerPos.y - enemyPos.y) < GetCollider().height / 2.0f + player.GetCollider().height / 2.0f)
-        {
-            currentState = EntityState::Walking;
-        }
-        else if (currentDistanceX < ATTACK_RANGE && currentDistanceX > TOUCH_RANGE 
-            && std::abs(playerPos.y - enemyPos.y) < GetCollider().height / 2.0f + player.GetCollider().height / 2.0f)
-        {
-            currentState = EntityState::Running;
-            //shouldBeAttacking = true;
-            //velocity.x = 0.0f;
-        }
-        //else if(currentDistanceX == 0/* TOUCH_RANGE && currentDistanceY <= TOUCH_RANGE*/)
-        //{
-        //    //currentState = EntityState::Idle;
-        //    velocity.x = 0.0f;
-        //}
-    }
-    else
-    {
-        currentState = EntityState::Fleeing;
-    }
-
-    if (playerPos.x < enemyPos.x) 
-    {
+    if (playerPos.x < enemyPos.x) {
         faceRight = true;
-        if (currentState == EntityState::Walking) velocity.x = -WALK_SPEED;
-        else if (currentState == EntityState::Running) velocity.x = -RUN_SPEED;
-        else if (currentState == EntityState::Fleeing)
-        {
-            faceRight = false;
+    }
+    else if (playerPos.x > enemyPos.x) {
+        faceRight = false;
+    }
+
+    if (currentDistanceX < ATTACK_RANGE && std::abs(playerPos.y - enemyPos.y) < GetCollider().height / 2.0f + player.GetCollider().height / 2.0f) {
+        shouldBeAttacking = true;
+        velocity.x = 0.0f;
+    }
+    else if (currentDistanceX < CHASE_RANGE) {
+        currentState = EntityState::Running;
+        if (playerPos.x < enemyPos.x) {
+            velocity.x = -RUN_SPEED;
+        }
+        else {
             velocity.x = RUN_SPEED;
         }
     }
-    else if (playerPos.x > enemyPos.x)
-    {
-        faceRight = false;
-        if (currentState == EntityState::Walking) velocity.x = WALK_SPEED;
-        else if (currentState == EntityState::Running) velocity.x = RUN_SPEED;
-        else if (currentState == EntityState::Fleeing)
-        {
-            faceRight = true;
-            velocity.x = -RUN_SPEED;
-        }
+    else {
+        currentState = EntityState::Idle;
+        velocity.x = 0;
     }
 
- /*   EntityState previousState = currentState;
+    EntityState previousState = currentState;
 
-    if (shouldBeAttacking && previousState != EntityState::Running) 
-    {
-        currentState = EntityState::Running;
+    if (shouldBeAttacking && previousState != EntityState::Attacking) {
+        currentState = EntityState::Attacking;
         animationRun.reset();
     }
-    else if (!shouldBeAttacking && currentState == EntityState::Running && animationRun.isFinished()) 
-    {
+    else if (!shouldBeAttacking && currentState == EntityState::Attacking && animationRun.isFinished()) {
         currentState = EntityState::Idle;
     }
-    else if (!shouldBeAttacking && currentDistanceX >= CHASE_RANGE && currentState != EntityState::Running) 
-    {
+    else if (!shouldBeAttacking && currentDistanceX >= CHASE_RANGE && currentState != EntityState::Attacking) {
         currentState = EntityState::Idle;
-    }*/
+    }
 
-    if (currentState == EntityState::Running) 
-        if (soundAttacking.getStatus() != sf::Sound::Playing) soundAttacking.play();
-    else if (soundAttacking.getStatus() == sf::Sound::Playing) soundAttacking.stop();
+    if (currentState == EntityState::Attacking) {
+        if (soundAttacking.getStatus() != sf::Sound::Playing) {
+            soundAttacking.play();
+        }
+    }
+    else {
+        if (soundAttacking.getStatus() == sf::Sound::Playing) {
+            soundAttacking.stop();
+        }
+    }
 
     move(velocity * dt);
 
     switch (currentState) {
+    case EntityState::Running:
+        setTexture(*runTexture);
+        animationRun.update(0, dt, faceRight);
+        setTextureRect(animationRun.uvRect);
+        break;
     case EntityState::Idle:
         setTexture(*idleTexture);
         animationIdle.update(0, dt, faceRight);
         setTextureRect(animationIdle.uvRect);
         velocity.x = 0;
         break;
-    case EntityState::Running:
-        setTexture(*runTexture);
-        animationRun.update(0, dt, faceRight);
-        setTextureRect(animationRun.uvRect);
-        break;
-    case EntityState::Walking:
-        setTexture(*walkTexture);
-        animationWalk.update(0, dt, faceRight);
-        setTextureRect(animationWalk.uvRect);
-        break;
-    case EntityState::Fleeing:
+    case EntityState::Attacking:
         setTexture(*runTexture);
         animationRun.update(0, dt, faceRight);
         setTextureRect(animationRun.uvRect);

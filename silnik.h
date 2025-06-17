@@ -77,7 +77,7 @@ private:
 	//std::vector<Bee> enemies;
 	std::vector<sf::Sprite> backgrounds;
 	std::vector<Platform> platforms;
-	sf::Text text;
+	sf::Text textHP;
 
 	// prywatne funkcje 
 	void inicjalizacjaZmiennych();

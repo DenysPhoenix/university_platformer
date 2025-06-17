@@ -175,6 +175,7 @@ void Silnik::spawnEnemy()
 	bee_textures.emplace_back(&beeFly);
 	bee_textures.emplace_back(&beeAttack);
 	bee_textures.emplace_back(&beeHit);
+	
 	for (size_t i = 0; i < 5; i++)
 	{
 		int los = std::rand() % 10;
@@ -182,13 +183,13 @@ void Silnik::spawnEnemy()
 		int los2 = std::rand() % 2;
 		if (los2)
 		{
-			enemies.emplace_back(make_unique<Boar>(boar_textures, boar_sounds, sf::Vector2f(200+100 * los, 400 + (50 * los1))));
+			enemies.emplace_back(make_unique<Boar>(boar_textures, boar_sounds, sf::Vector2f(400 + 100 * los, 400 + (50 * los1))));
 		}
 		else
 		{
-			enemies.emplace_back(make_unique<Bee>(bee_textures, bee_sounds, sf::Vector2f(180 * los, 400 + (50 * los1))));
+			enemies.emplace_back(make_unique<Bee>(bee_textures, bee_sounds, sf::Vector2f(1200 + 50 * los, 400 + (50 * los1))));
 		}
-		
+
 	}
 	
 
@@ -306,9 +307,8 @@ void Silnik::spawnBackground()
 void Silnik::spawnPlatforms()
 {
 	platforms.clear();
-	sf::Texture staticTex, levTex;
+	sf::Texture staticTex;
 	staticTex.loadFromFile("static.png");
-	levTex.loadFromFile("levitating.png");
 	float x1 = this->window->getSize().x;
 	float y1 = this->window->getSize().y;
 	Platform pl(&staticTex, sf::Vector2f(200.f, 175.f), sf::Vector2f(0, 0), PlatformType::Static);
@@ -602,7 +602,7 @@ void Silnik::statistics()
 {
 	std::ostringstream ss;
 	ss << "(" << poz_x << ", " << poz_y << ")";
-	text.setString(ss.str());
+	//text.setString(ss.str());
 	if (poz_y >= 1)
 	{
 		this->tlo = new sf::Color(255, 186, 0, 0);
@@ -647,6 +647,9 @@ void Silnik::aktualizacjaEvents()
 
 void Silnik::aktualizacjaPlayer()
 {
+
+	
+
 	if (player->GetState() == EntityState::Dying)
 	{
 		poz_x = 0;
@@ -786,6 +789,7 @@ void Silnik::aktualizacja()
 
 void Silnik::wyswietlPlayer()
 {
+
 	sf::Texture hero;
 	sf::SoundBuffer Play;
 
@@ -849,12 +853,6 @@ void Silnik::wyswietlPlatform()
 void Silnik::wyswietlBackground()
 {
 
-	sf::Font font;
-	font.loadFromFile("arial.ttf");
-	text.setFont(font);
-	text.setPosition(0, 0);
-	this->window->draw(text);
-
 	sf::Texture texture;
 	texture.loadFromFile("Tiles.png");
 
@@ -869,12 +867,23 @@ void Silnik::wyswietlBackground()
 
 void Silnik::wyswietlenie()
 {
+
+
 	sf::Color kolor1 = *tlo;
 	this->window->clear(kolor1);
 	wyswietlBackground();
 	this->wyswietlEnemies();
 	this->wyswietlPlatform();
 	this->wyswietlPlayer();
+
+	sf::Font font;
+	font.loadFromFile("Super-Mario-Font.ttf");
+	textHP.setFont(font);
+	textHP.setCharacterSize(36);
+	textHP.setString("HP: "+ to_string(player->GetHP()));
+	textHP.setPosition(0, 0);
+	textHP.setFillColor(sf::Color::Yellow);
+	this->window->draw(textHP);
 	this->window->display();
 
 }
